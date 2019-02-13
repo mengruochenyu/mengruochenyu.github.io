@@ -1,0 +1,136 @@
+/*清除样式*/
+*{
+	margin: 0;
+	padding: 0;
+}
+img{
+	vertical-align: top;
+}
+ul,li{
+	list-style-type: none;
+}
+body{
+	font-family: 'PingFangHK-Medium';
+}
+.huoqu{
+	display: none;
+	position: absolute;
+	right: 0;
+	top: 10px;
+    border-radius: 5px;
+    background-color: rgba(64, 183, 175, 1);
+    color: rgba(255, 255, 255, 1);
+    font-size: 12px;
+    text-align: center;
+    width: 75px;
+    height: 28px;
+    line-height: 28px;
+}
+.top{
+	width: 92%;
+	height: 44px;
+	/*background: #3C3B40;*/
+	margin: 0 auto;
+	display: flex;
+	justify-content: center;
+	left: 168.75px;
+    color: rgba(255, 255, 255, 1);
+    font-size: 19px;
+    text-align: center;
+    line-height: 44px;
+}
+.img{
+	margin-top: 60px;
+	/*margin-left: 27%;*/
+	text-align: center;
+}
+.img2{
+	margin-top: 60px;
+	text-align: center;
+	/*margin-left: 27%;*/
+}
+.img1{
+	/*margin-top: 60px;*/
+	/*margin-left: 27%;*/
+	text-align: center;
+}
+.shouji{
+color: rgba(50, 50, 50, 1);
+font-size: 16px;
+margin-left: 8%;
+height: 22px;
+margin-top: 40px;
+line-height: 22px;
+font-weight: 600;
+}
+.yanzhengma{
+color: rgba(50, 50, 50, 1);
+font-size: 16px;
+margin-left: 8%;
+height: 22px;
+margin-top:25px;
+line-height: 22px;
+font-weight: 600;
+}
+.txt{
+	display: inline-block;
+	width: 84%;
+	outline: none;
+	height: 47px;
+	border: none;
+
+    width: 84%;
+    color: rgba(50, 50, 50, 1);
+font-size: 15px;
+}
+#txt{
+	display: inline-block;
+	width: 84%;
+	outline: none;
+	height: 47px;
+	border: none;
+	/*border-bottom:1px solid rgba(235, 235, 235, 1);*/
+    width: 84%;
+    color: rgba(50, 50, 50, 1);
+    font-size: 15px;
+}
+.btn{
+	width: 84%;
+	height: 45px;
+    margin: 0 auto;
+    margin-top: 25px;
+    border-radius: 5px;
+    background-color: rgba(235, 235, 235, 1);
+color: rgba(170, 170, 170, 1);
+font-size: 15px;
+line-height: 45px;
+text-align: center;
+}
+.foot{
+	text-align: center;
+	margin-top: 39px;
+	left: 108px;
+    height: 17px;
+    line-height: 17px;
+     font-size: 12px;
+}
+.cuowu{
+	margin-top: 15px;
+	color: gray;
+	text-align: center;
+    margin-bottom: 15px;
+}
+.erromsg {
+	display: none;
+	position: absolute;
+	right: 40%;
+	top: 55%;
+  border-radius: 5px;
+  background-color: #FF5F5F;
+  color: #FFFFFF;
+  font-size: 12px;
+  text-align: center;
+  width: 85px;
+  height: 28px;
+  line-height: 28px;
+}
