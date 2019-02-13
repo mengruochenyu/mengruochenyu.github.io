@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PatientCheckReportItemMapper">
+	<resultMap type="PatientCheckReportItem" id="patientCheckReportItemResultMap">
+		<id column="id" property="id"/>
+		<result column="patient_item_id" property="patientItemId"/>
+		<result column="package_id" property="packageId"/>
+		<result column="parent_id" property="parentId"/>
+		<result column="check_sheet_id" property="checkSheetId"/>
+		<result column="check_sheet_name" property="checkSheetName"/>
+		<result column="check_time" property="checkTime"/>
+		<result column="check_score" property="checkScore"/>
+		<result column="degree" property="degree"/>
+		<result column="calculate_score" property="calculateScore"/>
+		<result column="check_comment" property="checkComment"/>
+		<result column="check_suggest" property="checkSuggest"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="time" property="time"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="alert_status" property="alertStatus"/>
+		<result column="echart_type" property="echartType"/>
+		<result column="subjoin_result" property="subjoinResult"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="PatientCheckReportItem" useGeneratedKeys="true" keyProperty="id">
+		insert into patient_check_report_item(
+			patient_item_id,
+			package_id,
+			parent_id,
+			check_sheet_id,
+			check_sheet_name,
+			check_time,
+			check_score,
+			degree,
+			calculate_score,
+			check_comment,
+			check_suggest,
+			`time`,
+			create_user_id,
+			create_time,
+			echart_type,
+			subjoin_result
+		) values (
+			#{patientItemId},
+			#{packageId},
+			#{parentId},
+			#{checkSheetId},
+			#{checkSheetName},
+			#{checkTime},
+			#{checkScore},
+			#{degree},
+			#{calculateScore},
+			#{checkComment},
+			#{checkSuggest},
+			#{time},
+			#{createUserId},
+			#{createTime},
+			#{echartType},
+			#{subjoinResult}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from patient_check_report_item
+		where 
+			id = #{value}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="PatientCheckReportItem">
+		update patient_check_report_item
+			set 
+			<if test="patientItemId != null">
+				patient_item_id = #{patientItemId},
+			</if>
+			<if test="packageId != null">
+                package_id = #{packageId},
+			</if>
+			<if test="parentId != null">
+				parent_id = #{parentId},
+			</if>
+			<if test="checkSheetId != null">
+				check_sheet_id = #{checkSheetId},
+			</if>
+			<if test="checkSheetName != null and checkSheetName != ''">
+				check_sheet_name = #{checkSheetName},
+			</if>
+			<if test="checkTime != null and checkTime != ''">
+				check_time = #{checkTime},
+			</if>
+			<if test="checkScore != 0">
+				check_score = #{checkScore},
+			</if>
+			<if test="degree != 0">
+				degree = #{degree},
+			</if>
+			<if test="calculateScore != 0">
+                calculate_score= #{calculateScore},
+			</if>
+			<if test="checkComment != null and checkComment != ''">
+				check_comment = #{checkComment},
+			</if>
+			<if test="checkSuggest != null and checkSuggest != ''">
+				check_suggest = #{checkSuggest},
+			</if>
+			<if test="checkSuggest != null">
+                check_suggest = #{checkSuggest},
+			</if>
+			<if test="subjoinResult != null">
+                subjoin_result = #{subjoinResult},
+			</if>
+			<if test="time != null">
+                `time` = #{time},
+			</if>
+			id = id
+			where
+				id = #{id}
+	</update>
+
+
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="patientCheckReportItemResultMap">
+		select * from
+			patient_check_report_item
+		where
+			id = #{value}
+	</select>
+
+	<!-- 条件查询 -->
+	<select id="findByCondition" parameterType="PatientCheckReportItem" resultMap="patientCheckReportItemResultMap">
+		select * from
+			patient_check_report_item where 1=1
+			<if test="createUserId != null and createUserId != ''">
+				and create_user_id = #{createUserId}
+			</if>
+			<if test="patientItemId != null">
+				and patient_item_id = #{patientItemId}
+			</if>
+			<if test="packageId != null">
+				and package_id = #{packageId}
+			</if>
+			<if test="parentId != null">
+				and parent_id = #{parentId}
+			</if>
+			<if test="checkSheetId != null">
+				and check_sheet_id = #{checkSheetId}
+			</if>
+			<if test="checkSheetName != null and checkSheetName != ''">
+				and check_sheet_name = #{checkSheetName}
+			</if>
+			<if test="checkTime != null and checkTime != ''">
+				and check_time = #{checkTime}
+			</if>
+ 			<if test="checkScore != 0">
+				and check_score = #{checkScore}
+			</if>
+			<if test="degree != null">
+				and degree = #{degree}
+			</if> 
+			<if test="checkComment != null and checkComment != ''">
+				and check_comment = #{checkComment}
+			</if>
+			<if test="checkSuggest != null and checkSuggest != ''">
+				and check_suggest = #{checkSuggest}
+			</if>
+			<if test="time != null">
+				and `time` = #{time}
+			</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="patientCheckReportItemResultMap">
+		select * from 
+				patient_check_report_item a where 1=1
+		<if test="pd.query_time_start != null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end != ''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>
+		order by a.create_time desc	
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="patientCheckReportItemResultMap">
+		select * from patient_check_report_item a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteBatch" parameterType="String">
+		delete from patient_check_report_item
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+
+    <!-- 量表体检报告列表(包含预警状态) -->
+	<select id="reportItemWithAlert" parameterType="Long" resultMap="patientCheckReportItemResultMap">
+        SELECT
+            a.id,
+            a.check_sheet_id,
+            a.check_sheet_name,
+            a.calculate_score AS check_score,
+            a.patient_item_id,
+            IF(b.id,1,0) 'alert_status'
+        FROM
+            patient_check_report_item a
+        LEFT JOIN
+            patient_check_alert b
+        ON
+        b.patient_item_id = a.patient_item_id and b.check_sheet_id = a.check_sheet_id
+        where
+        a.patient_item_id IN
+        (
+            select
+                id
+            FROM
+                patient_item
+            WHERE
+                group_id = #{value}
+        )
+	</select>
+
+    <!--查找相同量表的体检记录-->
+    <select id="findCompareSheetReports" parameterType="String" resultType="map">
+        SELECT
+        a.patient_item_id AS patientItemId,
+        a.check_sheet_id AS sheetId,
+        a.check_sheet_name AS sheetName,
+        a.calculate_score AS sheetScore,
+        DATE_FORMAT(a.create_time ,"%Y/%m/%d")AS checkTime,
+        d.`name` AS hospitalName
+        FROM patient_check_report_item a
+        LEFT JOIN
+        (
+        SELECT t.check_sheet_id
+        FROM
+        (SELECT i1.check_sheet_id ,SUM(1) AS checkCount
+        FROM patient_check_report_item i1,patient_item i2
+        WHERE i2.mobile=#{mobile}  AND i1.patient_item_id=i2.id
+        GROUP BY i1.check_sheet_id )t
+        WHERE t.checkCount>1
+        )b ON a.check_sheet_id=b.check_sheet_id
+        LEFT JOIN
+        patient_item c ON a.patient_item_id=c.id
+        LEFT JOIN hospital d ON c.hospital_id=d.id
+        WHERE c.mobile=#{mobile}
+        ORDER BY a.create_time
+    </select>
+
+    <!--将缓存的量表体检报告清空-->
+    <delete id="clearPatientItemSheetReport" parameterType="long">
+        DELETE FROM patient_check_report_item WHERE patient_item_id=#{VALUE}
+    </delete>
+    
+    <!-- 二期新增 -->
+    <!-- 获取团体某一量表的报告列表 -->
+    <select id="getReportList" parameterType="com.blue.pem.api.entity.ReportSearchConditionDO" resultType="com.blue.pem.api.entity.CheckResultPercentVO">
+		select i.batch_id batchId, a.check_sheet_id sheetId, a.degree result, count(i.id) peopleCount 
+		from patient_check_report_item a 
+		left join patient_item i on a.patient_item_id = i.id 
+		left join hospital_group_team t on i.team_id = t.id   
+		where i.batch_id = #{batchId} and a.check_sheet_id = #{sheetId}
+		<if test="departmentId != null">
+		and t.department_id = #{departmentId} 
+		</if>
+		<if test="teamId != null">
+		and i.team_id = #{teamId}  
+		</if>
+		group by a.degree
+		
+	</select>
+	<!-- 获取团体某一量表的测试人数 -->
+	<select id="getPeopleCountBysheet" parameterType="com.blue.pem.api.entity.ReportSearchConditionDO" resultType="java.lang.Integer">
+		select count(*) 
+		from patient_check_report_item a 
+		left join patient_item i on a.patient_item_id = i.id  
+		left join hospital_group_team t on i.team_id = t.id  
+		<!-- left join patient_check_report cr on a.patient_item_id = cr.patient_item_id  -->
+		where i.batch_id = #{batchId} and a.check_sheet_id = #{sheetId}
+		<if test="departmentId != null">
+		and t.department_id = #{departmentId} 
+		</if>
+		<if test="teamId != null">
+		and i.team_id = #{teamId}  
+		</if>
+	</select>
+	
+	<!-- 获取所有没有做题的量表id -->
+	<select id="getUndoSheetIdList" parameterType="map" resultType="Long">
+		select a.id from check_sheet a 
+		where  a.id in 
+		<foreach item="item" index="index" collection="idList" open="(" separator="," close=")">
+            #{item}
+		</foreach> 
+		and a.id not in (
+		     select b.check_sheet_id from patient_check_report_item b 
+		     where b.patient_item_id = #{patientItemId}
+		)
+	</select>
+	
+	<!-- 获取用户的历史报告数量-->
+	<!-- <select id="getItemCountByCondition" parameterType="map" resultType="Integer">
+		select count(*) from patient_check_report_item a 
+		left join patient_check_report b on a.patient_item_id = b.patient_item_id 
+		left join patient_item c on a.patient_item_id = c.id 
+		where 1 = 1 and c.member_id = #{memberId} and b.report_status &gt; 0  
+		<if test="sheetId != null and sheetId != ''">
+		and a.check_sheet_id = #{sheetId}  
+		</if>
+		<if test="startTime != null and startTime != ''">
+		and a.check_time &gt;= #{startTime}  
+		</if>
+		<if test="endTime != null and endTime != ''">
+		and a.check_time &lt;= #{endTime}  
+		</if>
+	</select> -->
+	
+	<!-- 获取用户的历史报告列表 -->
+	<select id="getFactorScoreList" parameterType="pd" resultType="pd">
+		select a.check_time checkTime, d.score score from 
+		patient_check_report a  
+		left join patient_item c on a.patient_item_id = c.id 
+		left join patient_check_report_factor d on a.patient_item_id = d.patient_item_id 
+		where 1 = 1 and c.member_id = #{memberId} and a.report_status &gt; 0 
+		<if test="factorName != null and factorName != '' ">
+		and d.name = #{factorName}  
+		</if>
+		<if test="startTime != null">
+		and a.check_time &gt;= #{startTime}  
+		</if>
+		<if test="endTime != null">
+		and a.check_time &lt;= #{endTime}  
+		</if>
+		order by a.check_time desc 
+		limit 0,30
+	</select>
+	
+	
+	
+	
+	<!-- 获取用户检测的量表列表 -->
+	<select id="getCheckSheetList" parameterType="pd" resultType="pd">
+		select s.id sheetId, s.name sheetName from patient_check_report_item a 
+		left join check_sheet s on a.check_sheet_id = s.id  
+		left join patient_check_report b on a.patient_item_id = b.patient_item_id 
+		left join patient_item c on a.patient_item_id = c.id 
+		where 1 = 1 and c.member_id = #{memberId} and b.id is not null and b.report_status &gt; 0
+		<if test="packageId != null and packageId != ''">
+		and a.package_id = #{packageId}  
+		</if>
+		<if test="sheetId != null and sheetId != ''">
+		and a.check_sheet_id = #{sheetId}  
+		</if>
+		<if test="startTime != null and startTime != ''">
+		and a.check_time &gt;= #{startTime}  
+		</if>
+		<if test="endTime != null and endTime != ''">
+		and a.check_time &lt;= #{endTime}  
+		</if>
+		group by s.id 
+		order by a.check_time desc 
+	</select>
+	
+	<!-- 获取关键字搜索量表名称/套餐名称结果的数量 -->
+	<select id="getNameSearchList" parameterType="pd" resultType="pd">
+	    select m.* from 
+		(select aa.factorName result, 'factor' as type, aa.factorName factorName, b.package_id packageId, aa.create_time checkTime    
+		from (
+		      select a.name factorName, a.patient_item_id, a.create_time 
+		      from patient_check_report_factor a 
+		      left join patient_item c on a.patient_item_id = c.id 
+		      where c.member_id = #{condition.memberId} and a.name like concat('%', #{condition.keyword}, '%')  
+		      ) aa
+		left join patient_check_report b on aa.patient_item_id = b.patient_item_id 
+		left join check_package p on b.package_id = p.id 
+		where b.report_status &gt; 0 
+		
+		group by aa.factorName     
+		union 
+		select p.name result, 'package' as type, null as factorName, aa.package_id packageId, aa.check_time checkTime 
+		from (
+		      select a.package_id, a.report_status, a.check_time 
+		      from patient_check_report a 
+		      left join patient_item c on a.patient_item_id = c.id 
+		      where c.member_id = #{condition.memberId} 
+		      group by a.package_id) aa 
+		left join check_package p on aa.package_id = p.id 
+		where aa.report_status &gt; 0 
+		and p.name like concat('%', #{condition.keyword}, '%') 
+		) m   
+	</select>
+	<!-- 获取关键字搜索量表名称/套餐名称结果-->
+	<select id="getNameSearchPaging" parameterType="com.blue.pem.api.entity.PageCondition" resultType="pd">
+	    select m.result, m.type, m.factorName, m.packageId from
+		(select aa.factorName result, 'factor' as type, aa.factorName factorName, b.package_id packageId, aa.create_time checkTime    
+		from (
+		      select a.name factorName, a.patient_item_id, a.create_time 
+		      from patient_check_report_factor a 
+		      left join patient_item c on a.patient_item_id = c.id 
+		      where c.member_id = #{condition.memberId} and a.name like concat('%', #{condition.keyword}, '%')  
+		      ) aa
+		left join patient_check_report b on aa.patient_item_id = b.patient_item_id 
+		left join check_package p on b.package_id = p.id 
+		where b.report_status &gt; 0 
+		
+		group by aa.factorName     
+		union 
+		select p.name result, 'package' as type, null as factorName, aa.package_id packageId, aa.check_time checkTime 
+		from (
+		      select a.package_id, a.report_status, a.check_time 
+		      from patient_check_report a 
+		      left join patient_item c on a.patient_item_id = c.id 
+		      where c.member_id = #{condition.memberId} 
+		      group by a.package_id) aa 
+		left join check_package p on aa.package_id = p.id 
+		where aa.report_status &gt; 0 
+		and p.name like concat('%', #{condition.keyword}, '%') 
+		) m
+		order by m.checkTime desc  
+		limit #{currentResult}, #{pageSize}     
+	</select>
+
+</mapper>

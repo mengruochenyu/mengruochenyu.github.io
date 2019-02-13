@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CardVirtualMapper">
+	<resultMap type="CardVirtual" id="cardVirtualResultMap">
+		<id column="id" property="id"/>
+		<result column="num" property="num"/>
+		<result column="batch_name" property="batchName"/>
+		<result column="hospital_id" property="hospitalId"/>
+		<result column="package_mix_id" property="packageMixId"/>
+		<result column="patient_id" property="patientId"/>
+		<result column="status" property="status"/>
+		<result column="active_time" property="activeTime"/>
+		<result column="check_time" property="checkTime"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+
+        <association property="hospitalName" column="hospital_id" select="selectHospitalNameById"></association>
+        <association property="patientItemId" column="num" select="selectPatientItemIdByCardNum"></association>
+        <association property="patientItemName" column="num" select="selectPatientItemNameByCardNum"></association>
+        <association property="officeId" column="num" select="selectPatientOfficeIdByCardNum"></association>
+        <association property="officeName" column="num" select="selectPatientOfficeNameByCardNum"></association>
+	</resultMap>
+
+    <!--根据卡号查找关联用户id-->
+    <select id="selectPatientItemIdByCardNum" parameterType="String" resultType="Long">
+        SELECT id FROM patient_item WHERE check_card_num=#{value}
+    </select>
+
+    <!--根据卡号查找关联用户名称-->
+    <select id="selectPatientItemNameByCardNum" parameterType="String" resultType="String">
+        SELECT name FROM patient_item WHERE check_card_num=#{value}
+    </select>
+
+    <!--根据卡号查找关联科室ID-->
+    <select id="selectPatientOfficeIdByCardNum" parameterType="String" resultType="Long">
+        SELECT check_office_id FROM patient_item WHERE check_card_num=#{value}
+    </select>
+
+    <!--根据卡号查找关联科室名称-->
+    <select id="selectPatientOfficeNameByCardNum" parameterType="String" resultType="String">
+        SELECT check_office_name FROM patient_item WHERE check_card_num=#{value}
+    </select>
+
+    <!--根据医院id查询名称-->
+    <select id="selectHospitalNameById" parameterType="long" resultType="String">
+        SELECT name from hospital WHERE id=#{value}
+    </select>
+
+	<!-- 新增-->
+	<insert id="save" parameterType="CardVirtual" useGeneratedKeys="true" keyProperty="id">
+		insert into card_virtual(
+			num,
+			batch_name,
+			hospital_id,
+			package_mix_id,
+			patient_id,
+			status,
+			active_time,
+			check_time,
+			create_user_id,
+			create_time
+		) values (
+			#{num},
+			#{batchName},
+			#{hospitalId},
+			#{packageMixId},
+			#{patientId},
+			#{status},
+			#{activeTime},
+			#{checkTime},
+			#{createUserId},
+			#{createTime}
+		)
+	</insert>
+	
+	<!--批量新增-->
+    <insert id="batchSave" parameterType="list">
+        insert into card_virtual(
+            num,
+			batch_name,
+			hospital_id,
+			package_mix_id,
+			patient_id,
+			status,
+			active_time,
+			check_time,
+			create_user_id,
+			create_time
+        )
+        values
+        <foreach collection ="list" item="item" index= "index" separator =",">
+        (
+            #{item.num},
+			#{item.batchName},
+			#{item.hospitalId},
+			#{item.packageMixId},
+			#{item.patientId},
+			#{item.status},
+			#{item.activeTime},
+			#{item.checkTime},
+			#{item.createUserId},
+			#{item.createTime}
+        )
+        </foreach>
+    </insert>
+	
+	<!-- 删除-->
+	<delete id="deleteLogical" parameterType="java.lang.Long">
+		delete from card_virtual
+		where 
+			id = #{value}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="CardVirtual">
+		update card_virtual
+			set 
+			<if test="num!=null and num!=''">
+				num = #{num},
+			</if>
+			<if test="batchName!=null and batchName!=''">
+				batch_name = #{batchName},
+			</if>
+			<if test="hospitalId!=null">
+				hospital_id = #{hospitalId},
+			</if>
+			<if test="packageMixId!=null">
+				package_mix_id = #{packageMixId},
+			</if>
+			<if test="patientId!=null">
+				patient_id = #{patientId},
+			</if>
+			<if test="status!=null">
+				status = #{status},
+			</if>
+			<if test="activeTime!=null and activeTime!=''">
+				active_time = #{activeTime},
+			</if>
+			<if test="checkTime!=null and checkTime!=''">
+				check_time = #{checkTime},
+			</if>
+			id = id
+			where 
+				id = #{id}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="cardVirtualResultMap">
+		select * from 
+			card_virtual
+		where 
+			id = #{value}
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="findByCondition" parameterType="CardVirtual" resultMap="cardVirtualResultMap">
+		select * from 
+			card_virtual where 1=1
+			<if test="createUserId!=null and createUserId!=''">
+				and create_user_id = #{createUserId}
+			</if>
+			<if test="num!=null and num!=''">
+				and num = #{num}
+			</if>
+			<if test="batchName!=null and batchName!=''">
+				and batch_name = #{batchName}
+			</if>
+			<if test="hospitalId!=null">
+				and hospital_id = #{hospitalId}
+			</if>
+			<if test="packageMixId!=null">
+				and package_mix_id = #{packageMixId}
+			</if>
+			<if test="patientId!=null">
+				and patient_id = #{patientId}
+			</if>
+			<if test="status!=null">
+				and status = #{status}
+			</if>
+			<if test="activeTime!=null and activeTime!=''">
+				and active_time = #{activeTime}
+			</if>
+			<if test="checkTime!=null and checkTime!=''">
+				and check_time = #{checkTime}
+			</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="cardVirtualResultMap">
+		select a.* from
+				card_virtual a
+        LEFT JOIN patient_item b ON a.num=b.check_card_num
+        where 1=1
+		<if test="pd.hospitalId!=null and pd.hospitalId!=''"><!-- 医院 -->
+			and a.hospital_id=#{pd.hospitalId}
+		</if>
+		<if test="pd.card_num!=null and pd.card_num!=''"><!-- 卡号 -->
+			and a.num LIKE concat("%",#{pd.card_num},"%")
+		</if>
+		<if test="pd.patient_item_name!=null and pd.patient_item_name!=''"><!-- 用户名称 -->
+			and b.name LIKE concat("%",#{pd.patient_item_name},"%")
+		</if>
+        <if test="pd.status!=null and pd.status!='-1'"><!-- 卡片状态 -->
+            and a.status=#{pd.status}
+        </if>
+        <if test="pd.create_time_start!=null and pd.create_time_start!=''"><!-- 创建时间开始-->
+            and a.create_time&gt;=concat(#{pd.create_time_start},"00:00:00")
+        </if>
+        <if test="pd.create_time_end!=null and pd.create_time_end!=''"><!-- 创建时间结束-->
+            and a.create_time&lt;=concat(#{pd.create_time_end},"23:59:59")
+        </if>
+        <if test="pd.check_time_start!=null and pd.check_time_start!=''"><!-- 检测时间开始-->
+            and a.check_time&gt;=concat(#{pd.check_time_start},"00:00:00")
+        </if>
+        <if test="pd.check_time_end!=null and pd.check_time_end!=''"><!-- 检测时间结束-->
+            and a.check_time&lt;=concat(#{pd.check_time_end},"23:59:59")
+        </if>
+        order by a.create_time desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="cardVirtualResultMap">
+		select * from card_virtual a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteBatch" parameterType="String">
+		delete from card_virtual
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+
+    <!--虚拟卡列表查询(医院端)-->
+    <select id="findVirtualCardlistPage" parameterType="page" resultType="map">
+        SELECT
+        a.id,
+        a.check_card_num AS checkCardNum,
+        a.treat_card_num AS treatCardNum,
+        a.name ,
+        a.mobile,
+        b.create_time AS createTime,
+        b.active_time AS activeTime,
+        CASE b.status
+        WHEN 0 THEN "未激活"
+        WHEN 1 THEN "已激活"
+        ELSE "已检测" END AS statusName,
+        b.check_time AS checkTime,
+        a.check_office_name AS checkOficeName,
+        CASE a.treat_card_status
+        WHEN 1 THEN "开启"
+        ELSE "关闭" END AS treatCardStatus,
+        (
+            SELECT cp.name FROM patient_package_asso ppa LEFT JOIN check_package cp ON ppa.package_id = cp.id
+            WHERE ppa.patient_item_id = a.id ORDER BY ppa.create_time DESC limit 1
+        ) AS checkPackageName
+        FROM patient_item a
+        LEFT JOIN card_virtual b ON a.check_card_num = b.num
+        WHERE a.hospital_id =#{pd.hospitalId} AND a.check_card_num IS NOT NULL AND a.check_card_type=2
+        <if test="pd.queryKey!=null and pd.queryKey!=''">
+            AND (a.check_card_num like concat('%',#{pd.queryKey},'%') OR a.name like concat('%',#{pd.queryKey},'%'))
+        </if>
+        <if test="pd.mobile!=null and pd.mobile!=''">
+            AND a.mobile =#{pd.mobile}
+        </if>
+        <if test="pd.checkTimeStart!=null and pd.checkTimeStart!=''">
+            AND (b.check_time IS NOT NULL AND date_format(b.check_time,'%Y-%m-%d')&gt;=#{pd.checkTimeStart})
+        </if>
+        <if test="pd.checkTimeEnd!=null and pd.checkTimeEnd!=''">
+            AND (b.check_time IS NOT NULL AND date_format(b.check_time,'%Y-%m-%d')&lt;=#{pd.checkTimeEnd})
+        </if>
+        <if test="pd.officeId!=null">
+            AND a.check_office_id =#{pd.officeId}
+        </if>
+        <if test="pd.departmentId!=null">
+            AND a.check_office_id IN (SELECT office_id FROM hospital_depart_office_asso WHERE department_id=#{pd.departmentId})
+        </if>
+        <if test="pd.checkStatus!=null">
+            AND b.status =#{pd.checkStatus}
+        </if>
+        <if test="pd.treatStatus!=null">
+            AND a.treat_card_status =#{pd.treatStatus}
+        </if>
+        ORDER BY b.check_time desc, b.active_time desc, b.create_time DESC
+    </select>
+
+    <!--查找虚拟卡序列号-->
+    <select id="findSerialNo" parameterType="long" resultType="int">
+        SELECT count(1)+1 FROM card_virtual WHERE hospital_id=#{value} AND date_format(create_time,"%Y%m%d")=date_format(now(),"%Y%m%d")
+    </select>
+	
+</mapper>

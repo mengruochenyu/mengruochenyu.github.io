@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DoctorSpecialityAssoMapper">
+	<resultMap type="DoctorSpecialityAsso" id="doctorSpecialityAssoResultMap">
+		<id column="id" property="id"/>
+		<result column="doctor_id" property="doctorId"/>
+		<result column="speciality_id" property="specialityId"/>
+		<result column="font_color_id" property="fontColorId"/>
+		<result column="del_flag" property="delFlag"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="DoctorSpecialityAsso" useGeneratedKeys="true" 
+		keyProperty="id">
+		insert into p_doctor_speciality_asso(
+			doctor_id,
+			speciality_id,
+			font_color_id,
+			create_user_id,
+			create_time
+		) values (
+			#{doctorId},
+			#{specialityId},
+			#{fontColorId},
+			#{createUserId},
+			#{createTime}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from p_doctor_speciality_asso
+		where
+				id = #{value}
+	</delete>
+	
+	<!-- 软删除-->
+	<update id="deleteLogical" parameterType="java.lang.Long">
+		update p_doctor_speciality_asso set del_flag=1
+		where id = #{value}
+	</update>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="DoctorSpecialityAsso">
+		update p_doctor_speciality_asso
+			set 
+			<if test="doctorId!=null">
+				`doctor_id` = #{doctorId},
+			</if>
+			<if test="specialityId!=null">
+				`speciality_id` = #{specialityId},
+			</if>
+			<if test="fontColorId!=null">
+				`font_color_id` = #{font_color_Id},
+			</if>
+		<if test="updateUserId!=null and updateUserId!=''">
+			update_user_id = #{updateUserId},
+		</if>
+		<if test="updateTime!=null">
+			update_time = #{updateTime},
+		</if>
+			id = id
+			where
+				id = #{id}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="doctorSpecialityAssoResultMap">
+		select * from 
+			p_doctor_speciality_asso
+		where 
+			id = #{value}
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="findByCondition" parameterType="DoctorSpecialityAsso" resultMap="doctorSpecialityAssoResultMap">
+		select * from 
+			p_doctor_speciality_asso where del_flag=0
+			<if test="doctorId!=null">
+				and `doctor_id` = #{doctorId}
+			</if>
+			<if test="specialityId!=null">
+				and `speciality_id` = #{specialityId}
+			</if>
+			<if test="fontColorId!=null">
+				and `font_color_id` = #{fontColorId}
+			</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="doctorSpecialityAssoResultMap">
+		select * from 
+				p_doctor_speciality_asso a where del_flag=0
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.name like concat('%',#{pd.query_key},'%')
+		</if>
+			order by doctor_id desc
+	</select>
+	
+		<!-- 伪列表 -->
+	<select id="fakeListAll" parameterType="String" resultType="map">
+		select a.id,a.doctor_id,
+				(SELECT pd.name from p_doctor pd where a.doctor_id = pd.id )AS doctorName,
+				(SELECT td.dic_name from t_dictionary td where a.speciality_id = td.dic_id )AS speciality_name,
+				(SELECT td.dic_name from t_dictionary td where a.font_color_id = td.dic_id )AS font_color
+			from p_doctor_speciality_asso a where del_flag=0 order by doctor_id desc
+	</select>
+	
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="doctorSpecialityAssoResultMap">
+		select * from p_doctor_speciality_asso a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteBatch" parameterType="String">
+		delete from p_doctor_speciality_asso
+		where id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 批量删除 -->
+	<update id="deleteLogicalBatch" parameterType="String">
+		update p_doctor_speciality_asso set del_flag=1  
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	<!-- 获取医生的特长列表 -->
+	<select id="listNameByDoctorId" parameterType="Long" resultType="pd">
+		select b.dic_name name, c.dic_name fontColor from p_doctor_speciality_asso a 
+		left join t_dictionary b on a.speciality_id = b.dic_id 
+		left join t_dictionary c on a.font_color_id = c.dic_id 
+		where a.doctor_id = #{doctorId}
+ 	</select>
+	
+</mapper>

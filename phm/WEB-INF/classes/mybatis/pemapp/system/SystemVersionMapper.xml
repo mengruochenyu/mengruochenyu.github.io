@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="SystemVersionMapper">
+	<resultMap type="SystemVersion" id="systemVersionResultMap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="version" property="version"/>
+		<result column="type" property="type"/>
+		<result column="file_down_address" property="fileDownAddress"/>
+		<result column="qrcode_down_address" property="qrcodeDownAddress"/>
+		<result column="update_hint" property="updateHint"/>
+		<result column="update_date" property="updateDate"/>
+		<result column="status" property="status"/>
+		<result column="size" property="size"/>
+		<result column="is_constraint" property="isConstraint"/>
+		<result column="version_type" property="versionType"/>
+		<result column="del_flag" property="delFlag"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="SystemVersion" useGeneratedKeys="true" 
+		keyProperty="id">
+		insert into p_system_version(
+			name,
+			version,
+			type,
+			file_down_address,
+			qrcode_down_address,
+			update_hint,
+			update_date,
+			status,
+			size,
+			is_constraint,
+			version_type,
+			create_user_id,
+			create_time
+		) values (
+			#{name},
+			#{version},
+			#{type},
+			#{fileDownAddress},
+			#{qrcodeDownAddress},
+			#{updateHint},
+			#{updateDate},
+			#{status},
+			#{size},
+			#{isConstraint},
+			#{versionType},
+			#{createUserId},
+			#{createTime}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from p_system_version
+		where
+				id = #{value}
+	</delete>
+	
+	<!-- 软删除-->
+	<update id="deleteLogical" parameterType="java.lang.Long">
+		update p_system_version set del_flag=1
+		where id = #{value}
+	</update>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="SystemVersion">
+		update p_system_version
+			set 
+			<if test="name!=null and name!=''">
+				`name` = #{name},
+			</if>
+			
+			<if test="version!=null and version!=''">
+				`version` = #{version},
+			</if>
+			
+			<if test="type!=null and type!=''">
+				`type` = #{type},
+			</if>
+			
+			<if test="fileDownAddress!=null and fileDownAddress!=''">
+				`file_down_address` = #{fileDownAddress},
+			</if>
+			
+			<if test="qrcodeDownAddress!=null and qrcodeDownAddress!=''">
+				`qrcode_down_address` = #{qrcodeDownAddress},
+			</if>
+			
+			<if test="updateHint!=null and updateHint!=''">
+				`update_hint` = #{updateHint},
+			</if>
+			
+			<if test="updateDate!=null and updateDate!=''">
+				`update_date` = #{updateDate},
+			</if>
+			
+			<if test="status!=null">
+				`status` = #{status},
+			</if>
+			<if test="size!=null and size!=''">
+				`size` = #{size},
+			</if>
+			
+			<if test="isConstraint!=null">
+				`is_constraint` = #{isConstraint},
+			</if>
+			<if test="versionType!=null and versionType!=''">
+				`version_type` = #{versionType},
+			</if>
+			
+		<if test="updateUserId!=null and updateUserId!=''">
+			update_user_id = #{updateUserId},
+		</if>
+		<if test="updateTime!=null">
+			update_time = #{updateTime},
+		</if>
+			id = id
+			where
+				id = #{id}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="systemVersionResultMap">
+		select * from 
+			p_system_version
+		where 
+			id = #{value}
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="findByCondition" parameterType="SystemVersion" resultMap="systemVersionResultMap">
+		select * from 
+			p_system_version where del_flag=0
+			<if test="name!=null and name!=''">
+				and `name` = #{name}
+			</if>
+			<if test="version!=null and version!=''">
+				and `version` = #{version}
+			</if>
+			<if test="type!=null and type!=''">
+				and `type` = #{type}
+			</if>
+			<if test="fileDownAddress!=null and fileDownAddress!=''">
+				and `file_down_address` = #{fileDownAddress}
+			</if>
+			<if test="qrcodeDownAddress!=null and qrcodeDownAddress!=''">
+				and `qrcode_down_address` = #{qrcodeDownAddress}
+			</if>
+			<if test="updateHint!=null and updateHint!=''">
+				and `update_hint` = #{updateHint}
+			</if>
+			<if test="updateDate!=null and updateDate!=''">
+				and `update_date` = #{updateDate}
+			</if>
+			<if test="status!=null">
+				and `status` = #{status}
+			</if>
+			<if test="size!=null and size!=''">
+				and `size` = #{size}
+			</if>
+			<if test="isConstraint!=null">
+				and `is_constraint` = #{isConstraint}
+			</if>
+			<if test="versionType!=null and versionType!=''">
+				and `version_type` = #{versionType}
+			</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="systemVersionResultMap">
+		select * from 
+				p_system_version a where del_flag=0
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.name like concat('%',#{pd.query_key},'%')
+		</if>
+			order by a.create_time desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="systemVersionResultMap">
+		select * from p_system_version a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteBatch" parameterType="String">
+		delete from p_system_version
+		where id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 批量删除 -->
+	<update id="deleteLogicalBatch" parameterType="String">
+		update p_system_version set del_flag=1  
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	<!-- 列表(全部) -->
+	<select id="getLatestVersion" parameterType="String" resultType="pd">
+		select a.id, a.name, a.version latestVersion, a.file_down_address fileDownAddress, a.is_constraint isConstraint, a.version_type versionType from p_system_version a 
+		where a.version_type = #{versionType} 
+		order by a.create_time desc 
+		limit 0,1
+	</select>
+	
+</mapper>

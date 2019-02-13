@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DictionaryMapper">
+	<resultMap type="Dictionary" id="dictionaryResultMap">
+		<id column="dic_id" property="dictionaryId"/>
+		<result column="dic_name" property="dicName"/>
+		<result column="dic_type" property="dicType"/>
+		<result column="sort" property="viewSortby"/>
+		<result column="desc" property="desc"/>
+		<result column="del_flag" property="delFlag"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="Dictionary">
+		insert into t_dictionary(
+			dic_name,
+			dic_type,
+			sort,
+			`desc`,
+			del_flag,
+			create_user_id,
+			create_time,
+			update_user_id,
+			update_time
+		) values (
+			#{dicName},
+			#{dicType},
+			#{viewSortby},
+			#{desc},
+			#{delFlag},
+			#{createUserId},
+			#{createTime},
+			#{updateUserId},
+			#{updateTime}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from t_dictionary
+		where 
+			dic_id = #{value}
+	</delete>
+
+	
+	<!-- 删除-->
+	<update id="deleteLogical" parameterType="java.lang.Long">
+		update t_dictionary set del_flag=1
+		where dic_id = #{value}
+	</update>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="Dictionary">
+		update t_dictionary
+			set 
+			<if test="dicName!=null and dicName!=''">
+				dic_name = #{dicName},
+			</if>
+			<if test="dicType!=null and dicType!=''">
+				dic_type = #{dicType},
+			</if>
+			<if test="viewSortby!=null">
+				sort = #{viewSortby},
+			</if>
+			<if test="desc!=null and desc!=''">
+				`desc` = #{desc},
+			</if>
+			<if test="updateUserId!=null and updateUserId!=''">
+				update_user_id = #{updateUserId},
+			</if>
+			<if test="updateTime!=null and updateTime!=''">
+				update_time = #{updateTime},
+			</if>
+			dic_id = dic_id
+			where 
+				dic_id = #{dictionaryId}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="dictionaryResultMap">
+		select * from 
+			t_dictionary
+		where 
+			dic_id = #{value}
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="dictionaryResultMap">
+		select * from 
+				t_dictionary a where del_flag=0 
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.dic_name like concat('%',#{pd.query_key},'%')
+		</if>
+		<if test="pd.query_dic_type!=null and pd.query_dic_type!=''"><!-- 关键字检索 -->
+			and a.dic_type=#{pd.query_dic_type}
+		</if>
+		order by a.dic_type,a.sort
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="dictionaryResultMap">
+		select * from t_dictionary a
+	</select>
+	
+	<!-- 批量删除 -->
+	<update id="deleteLogicalBatch" parameterType="String">
+		update t_dictionary set del_flag=1  
+		where dic_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	<!-- 根据代码类别查询对应字典列表 -->
+	<select id="findListByDicType" parameterType="java.lang.String" resultMap="dictionaryResultMap">
+		select * from t_dictionary a where a.dic_type = concat(#{value}) and del_flag = 0  order by a.sort
+	</select>
+	
+	<!-- 加载部门列表 -->
+	<select id="dicList" parameterType="String" resultMap="dictionaryResultMap">
+		SELECT a.dic_name,a.dic_type,a.dic_Id FROM t_dictionary a where a.dic_type="BM" and del_flag=0
+	</select>
+</mapper>

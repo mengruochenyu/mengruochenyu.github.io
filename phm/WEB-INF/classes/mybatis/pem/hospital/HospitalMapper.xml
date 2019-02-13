@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="HospitalMapper">
+	<resultMap type="Hospital" id="hospitalResultMap">
+		<id column="id" property="id"/>
+		<result column="type" property="type"/>
+		<result column="name" property="name"/>
+		<result column="logo_url" property="logoUrl"/>
+		<result column="account_name" property="accountName"/>
+		<result column="docking_name" property="dockingName"/>
+		<result column="docking_phone" property="dockingPhone"/>
+		<result column="address_prov" property="addressProv"/>
+		<result column="address_city" property="addressCity"/>
+		<result column="address_county" property="addressCounty"/>
+		<result column="address_detail" property="addressDetail"/>
+		<result column="contract_num" property="contractNum"/>
+		<result column="status" property="status"/>
+		<result column="report_audit" property="reportAudit"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="address_prov_id" property="addressProvId"/>
+		<result column="address_city_id" property="addressCityId"/>
+		<result column="address_county_id" property="addressCountyId"/>
+		<result column="hospital_path" property="hospitalPath"/>
+		<result column="user_path" property="userPath"/>
+		<result column="intro" property="intro"/>
+		<result column="card_right" property="cardRight"/>
+		<result column="user_look" property="userLook"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="Hospital" useGeneratedKeys="true" keyProperty="id">
+		insert into hospital(
+		    type,
+			name,
+			intro,
+			logo_url,
+			account_name,
+			docking_name,
+			docking_phone,
+			address_prov,
+			address_city,
+			address_county,
+			address_prov_id,
+			address_city_id,
+			address_county_id,
+			address_detail,
+			contract_num,
+			status,
+			report_audit,
+			create_user_id,
+			create_time,
+			hospital_path,
+			user_path,
+			card_right,
+			user_look,
+			is_share
+		) values (
+		    #{type},
+			#{name},
+			#{intro},
+			#{logoUrl},
+			#{accountName},
+			#{dockingName},
+			#{dockingPhone},
+			#{addressProv},
+			#{addressCity},
+			#{addressCounty},
+			#{addressProvId},
+			#{addressCityId},
+			#{addressCountyId},
+			#{addressDetail},
+			#{contractNum},
+			#{status},
+			#{reportAudit},
+			#{createUserId},
+			#{createTime},
+			#{hospitalPath},
+			#{userPath},
+			#{cardRight},
+			#{userLook},
+			#{isShare}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from hospital
+		where 
+			id = #{value}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="Hospital">
+		update hospital
+			set 
+			<if test="name!=null and name!=''">
+				name = #{name},
+			</if>
+			<if test="intro !=null and intro !=''">
+				intro = #{intro},
+			</if>
+			<if test="logoUrl!=null and logoUrl!=''">
+				logo_url = #{logoUrl},
+			</if>
+			<if test="accountName!=null and accountName!=''">
+				account_name = #{accountName},
+			</if>
+			<if test="dockingName!=null and dockingName!=''">
+				docking_name = #{dockingName},
+			</if>
+			<if test="dockingPhone!=null and dockingPhone!=''">
+				docking_phone = #{dockingPhone},
+			</if>
+			<if test="addressProv!=null and addressProv!=''">
+				address_prov = #{addressProv},
+			</if>
+			<if test="addressCity!=null and addressCity!=''">
+				address_city = #{addressCity},
+			</if>
+			<if test="addressCounty!=null and addressCounty!=''">
+				address_county = #{addressCounty},
+			</if>
+			<if test="addressProvId!=null and addressProvId!=''">
+				address_prov_id = #{addressProvId},
+			</if>
+			<if test="addressCityId!=null and addressCityId!=''">
+				address_city_id = #{addressCityId},
+			</if>
+			<if test="addressCountyId!=null and addressCountyId!=''">
+				address_county_id = #{addressCountyId},
+			</if>
+			<if test="addressDetail!=null and addressDetail!=''">
+				address_detail = #{addressDetail},
+			</if>
+			<if test="contractNum!=null and contractNum!=''">
+				contract_num = #{contractNum},
+			</if>
+			<if test="hospitalPath !=null and hospitalPath !=''">
+				hospital_path = #{hospitalPath},
+			</if>
+			<if test="userPath !=null and userPath !=''">
+				user_path = #{userPath},
+			</if>
+			<if test="status!=null">
+				status = #{status},
+			</if>
+			<if test="reportAudit!=null">
+				report_audit = #{reportAudit},
+			</if>
+			<if test="cardRight!=null">
+                card_right = #{cardRight},
+			</if>
+			<if test="userLook!=null">
+                user_look = #{userLook},
+			</if>
+			<if test="isShare!=null">
+                is_share = #{isShare},
+			</if>
+			id = id
+			where 
+				id = #{id}
+	</update>
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="hospitalResultMap">
+		select * from 
+			hospital
+		where 
+			id = #{value}
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="findByCondition" parameterType="Hospital" resultMap="hospitalResultMap">
+		select * from 
+			hospital where 1=1
+			<if test="createUserId!=null and createUserId!=''">
+				and create_user_id = #{createUserId}
+			</if>
+			<if test="type!=null and type!=0">
+				and type = #{type}
+			</if>
+			<if test="name!=null and name!=''">
+				and name = #{name}
+			</if>
+			<if test="logoUrl!=null and logoUrl!=''">
+				and logo_url = #{logoUrl}
+			</if>
+			<if test="accountName!=null and accountName!=''">
+				and account_name = #{accountName}
+			</if>
+			<if test="dockingName!=null and dockingName!=''">
+				and docking_name = #{dockingName}
+			</if>
+			<if test="dockingPhone!=null and dockingPhone!=''">
+				and docking_phone = #{dockingPhone}
+			</if>
+			<if test="addressProv!=null and addressProv!=''">
+				and address_prov = #{addressProv}
+			</if>
+			<if test="addressCity!=null and addressCity!=''">
+				and address_city = #{addressCity}
+			</if>
+			<if test="addressCounty!=null and addressCounty!=''">
+				and address_county = #{addressCounty}
+			</if>
+			<if test="addressDetail!=null and addressDetail!=''">
+				and address_detail = #{addressDetail}
+			</if>
+			<if test="contractNum!=null and contractNum!=''">
+				and contract_num = #{contractNum}
+			</if>
+			<if test="hospitalPath !=null and hospitalPath !=''">
+				and hospital_path = #{hospitalPath}
+			</if>
+			<if test="userPath !=null and userPath !=''">
+				and user_path = #{userPath}
+			</if>
+			<if test="status!=null">
+				and status = #{status}
+			</if>
+			<if test="reportAudit!=null">
+				and report_audit = #{reportAudit}
+			</if>
+			<if test="cardRight!=null">
+				and card_right = #{cardRight}
+			</if>
+			<if test="userLook!=null">
+				and user_look = #{userLook}
+			</if>
+			<if test="isShare!=null">
+                and is_share = #{isShare}
+			</if> 
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="hospitalResultMap">
+		select * from 
+				hospital a where 1=1
+		<if test="pd.query_type!=null and pd.query_type!=0"><!-- 类型 -->
+			and a.type = #{pd.query_type}
+		</if>		
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>
+        <if test="pd.name!=null and pd.name!=''"><!-- 关键字检索 -->
+            and a.name like concat('%',#{pd.name},'%')
+        </if>
+			order by a.create_time desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="hospitalResultMap">
+		select * from hospital a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteBatch" parameterType="String">
+		delete from hospital
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+</mapper>

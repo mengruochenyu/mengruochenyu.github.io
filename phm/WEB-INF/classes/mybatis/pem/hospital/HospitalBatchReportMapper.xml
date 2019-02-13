@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="HospitalBatchReportMapper">
+	<resultMap type="HospitalBatchReport" id="hospitalBatchReportResultMap">
+		<id column="id" property="id"/>
+		<result column="batch_id" property="batchId"/>
+		<result column="sheet_id" property="sheetId"/>
+		<result column="result" property="result"/>
+		<result column="people_count" property="peopleCount"/>
+        <result column="create_user_id" property="createUserId"/>
+        <result column="create_time" property="createTime"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="HospitalBatchReport" useGeneratedKeys="true" keyProperty="id">
+		insert into hospital_batch_report(
+        batch_id,
+        sheet_id,
+        result,
+        people_count,
+        create_user_id,
+        create_time
+		) values (
+            #{batchId},
+            #{sheetId},
+            #{result},
+            #{peopleCount},
+        #{createUserId},
+        #{createTime}
+		)
+	</insert>
+
+    <!--批量新增-->
+    <insert id="batchSave" parameterType="list">
+        insert into hospital_batch_report(
+            batch_id,
+            sheet_id,
+            result,
+            people_count,
+            create_user_id,
+            create_time
+        )
+        values
+        <foreach collection ="list" item="item" index= "index" separator =",">
+        (
+            #{item.batch_id},
+            #{item.sheet_id},
+            #{item.result},
+            #{item.people_count},
+            #{item.createUserId},
+            #{item.createTime}
+        )
+        </foreach>
+    </insert>
+
+	<!-- 删除-->
+	<update id="delete" parameterType="java.lang.Long">
+		delete from hospital_batch_report
+		where 
+			id = #{value}
+	</update>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="HospitalBatchReport">
+		update hospital_batch_report
+			set 
+			<if test="batchId!=null">
+				batch_id = #{batchId},
+			</if>
+			<if test="sheetId!=null">
+				sheet_id = #{sheetId},
+			</if>
+			<if test="result!=null">
+				result = #{result},
+			</if>
+			<if test="peopleCount!=null">
+				people_count = #{peopleCount},
+			</if>
+			id = id
+			where 
+				id = #{id}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="hospitalBatchReportResultMap">
+		select * from 
+			hospital_batch_report
+		where 
+			id = #{value}
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="findByCondition" parameterType="HospitalBatchReport" resultMap="hospitalBatchReportResultMap">
+		select * from 
+			hospital_batch_report where 1=1
+			<if test="createUserId!=null and createUserId!=''">
+				and create_user_id = #{createUserId}
+			</if>
+			<if test="batchId!=null">
+				and batch_id = #{batchId}
+			</if>
+			<if test="sheetId!=null">
+				and sheet_id = #{sheetId}
+			</if>
+			<if test="result!=null">
+				and result = #{result}
+			</if>
+			<if test="peopleCount!=null">
+				and people_count = #{peopleCount}
+			</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="hospitalBatchReportResultMap">
+		select * from 
+				hospital_batch_report a where 1=1
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.name like concat('%',#{pd.query_key},'%')
+		</if>
+			order by a.create_time desc	
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="hospitalBatchReportResultMap">
+		select * from hospital_batch_report a
+	</select>
+	
+	<!-- 批量删除 -->
+	<update id="deleteBatch" parameterType="String">
+		delete from hospital_batch_report
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+</mapper>

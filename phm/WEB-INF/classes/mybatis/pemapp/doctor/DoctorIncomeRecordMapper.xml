@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="DoctorIncomeRecordMapper">
+	<resultMap type="DoctorIncomeRecord" id="doctorIncomeRecordResultMap">
+		<id column="id" property="id"/>
+		<result column="doctor_id" property="doctorId"/>
+		<result column="order_id" property="orderId"/>
+		<result column="amount" property="amount"/>
+		<result column="income_time" property="incomeTime"/>
+		<result column="member_id" property="memberId"/>
+		<result column="del_flag" property="delFlag"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="DoctorIncomeRecord" useGeneratedKeys="true" 
+		keyProperty="id">
+		insert into p_doctor_income_record(
+			doctor_id,
+			order_id,
+			amount,
+			income_time,
+			member_id,
+			create_user_id,
+			create_time
+		) values (
+			#{doctorId},
+			#{orderId},
+			#{amount},
+			#{incomeTime},
+			#{memberId},
+			#{createUserId},
+			#{createTime}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from p_doctor_income_record
+		where
+				id = #{value}
+	</delete>
+	
+	<!-- 软删除-->
+	<update id="deleteLogical" parameterType="java.lang.Long">
+		update p_doctor_income_record set del_flag=1
+		where id = #{value}
+	</update>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="DoctorIncomeRecord">
+		update p_doctor_income_record
+			set 
+			<if test="doctorId!=null">
+				`doctor_id` = #{doctorId},
+			</if>
+			<if test="orderId!=null">
+				`order_id` = #{orderId},
+			</if>
+			<if test="amount!=null">
+				`amount` = #{amount},
+			</if>
+			<if test="incomeTime!=null">
+				`income_time` = #{incomeTime},
+			</if>
+			<if test="memberId!=null">
+				`member_id` = #{memberId},
+			</if>
+		<if test="updateUserId!=null and updateUserId!=''">
+			update_user_id = #{updateUserId},
+		</if>
+		<if test="updateTime!=null">
+			update_time = #{updateTime},
+		</if>
+			id = id
+			where
+				id = #{id}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="doctorIncomeRecordResultMap">
+		select * from 
+			p_doctor_income_record
+		where 
+			id = #{value}
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="findByCondition" parameterType="DoctorIncomeRecord" resultMap="doctorIncomeRecordResultMap">
+		select * from 
+			p_doctor_income_record where del_flag=0
+			<if test="doctorId!=null">
+				and `doctor_id` = #{doctorId}
+			</if>
+			<if test="orderId!=null">
+				and `order_id` = #{orderId}
+			</if>
+			<if test="amount!=null">
+				and `amount` = #{amount}
+			</if>
+			<if test="incomeTime!=null">
+				`income_time` = #{incomeTime},
+			</if>
+			<if test="memberId!=null">
+				and `member_id` = #{memberId}
+			</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="doctorIncomeRecordResultMap">
+		select * from 
+				p_doctor_income_record a where del_flag=0
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.income_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.income_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.name like concat('%',#{pd.query_key},'%')
+		</if>
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.name like concat('%',#{pd.query_key},'%')
+		</if>
+			order by doctor_id desc
+	</select>
+	
+	<!-- 列表(用于后台显示) -->
+	<select id="listAsViewlistPage" parameterType="page" resultType="pd">
+		select a.id, a.doctor_id doctorId, b.name doctorName, a.order_id orderId, 
+		 c.number orderNumber, a.amount, a.income_time incomeTime from 
+			p_doctor_income_record a 
+		left join p_doctor b on a.doctor_id = b.id 
+		left join p_member_order c on a.order_id = c.id 	
+		where a.del_flag=0
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and b.name like concat('%',#{pd.query_key},'%')
+		</if>
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			or c.number like concat('%',#{pd.query_key},'%')
+		</if>
+		<if test="pd.query_doctor_id!=null and pd.query_doctor_id!=''"><!-- 按医生检索 -->
+			and a.doctor_id = #{pd.query_doctor_id}
+		</if>
+		
+			order by a.create_time desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="doctorIncomeRecordResultMap">
+		select * from p_doctor_income_record a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteBatch" parameterType="String">
+		delete from p_doctor_income_record
+		where id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 批量删除 -->
+	<update id="deleteLogicalBatch" parameterType="String">
+		update p_doctor_income_record set del_flag=1  
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	<!-- 获取医生的收益总数量 -->
+	<select id="countByCondition" parameterType="map" resultType="Integer">
+		select count(*) from p_doctor_income_record a 
+		where a.doctor_id = #{doctorId} 
+		<if test="month!=null and month!=''">
+		    and `income_time` &gt; #{beginTime} 
+		    and `income_time` &lt; #{endTime} 
+	    </if> 
+	</select>
+	
+	<!-- 获取医生的收益列表 -->
+	<select id="pagingByCondition" parameterType="com.blue.pem.api.entity.PageCondition" resultMap="doctorIncomeRecordResultMap">
+		select a.*, b.name, b.photo_url photoUrl, c.number orderNumber, d.name memberName
+		from p_doctor_income_record a 
+		left join p_doctor b on a.doctor_id = b.id  
+		left join p_member_order c on a.order_id = c.id 
+		left join p_member d on a.member_id = d.id 
+		where a.doctor_id = #{condition.doctorId} 
+		<if test="condition.month!=null and condition.month!=''">
+		    and `income_time` &gt; #{condition.beginTime} 
+		    and `income_time` &lt; #{condition.endTime} 
+	    </if>
+	    order by a.create_time desc 
+	    limit #{currentResult}, #{pageSize}
+	</select>
+	
+	<!--  -->
+	<select id="listByIdList" parameterType="List" resultType="pd">
+		select c.number orderNumber, b.name doctorName, a.amount, a.income_time incomeTime 
+		from p_doctor_income_record a 
+		left join p_doctor b on a.doctor_id = b.id  
+		left join p_member_order c on a.order_id = c.id 
+		where a.id in 
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+		
+	</select>
+	
+	<!--  -->
+	<select id="showAsDataById" parameterType="Long" resultType="pd">
+		select c.id orderId, c.number orderNumber, b.id doctorId, b.name doctorName, a.amount, a.income_time incomeTime 
+		from p_doctor_income_record a 
+		left join p_doctor b on a.doctor_id = b.id  
+		left join p_member_order c on a.order_id = c.id 
+		where a.id = #{id}
+		
+	</select>
+	
+	
+	
+</mapper>

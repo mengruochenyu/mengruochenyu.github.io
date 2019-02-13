@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PlatformuserMapper">
+	<resultMap type="Platformuser" id="platformuserResultMap">
+		<id column="platform_user_id" property="platformuserId"/>
+		<result column="corporate_id" property="corporateId"/>
+		<result column="accountname" property="accountname"/>
+		<result column="password" property="password"/>
+		<result column="name" property="name"/>
+		<result column="mobile_phone" property="mobilePhone"/>
+		<result column="qq_id" property="qqId"/>
+		<result column="type" property="type"/>
+		<result column="status" property="status"/>
+		<result column="role_id" property="roleId"/>
+		<result column="del_flag" property="delFlag"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="role_name" property="roleName"/>
+		<result column="dic_name" property="depcdName"/>
+		<result column="depcd" property="depcd"/>
+		<result column="sex" property="sex"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="Platformuser">
+		insert into t_platformuser(
+			corporate_id,
+			accountname,
+			password,
+			name,
+			mobile_phone,
+			qq_id,
+			type,
+			status,
+			role_id,
+			sex,
+			depcd,
+			create_user_id,
+			create_time,
+			update_user_id,
+			del_flag,
+			update_time
+		) values (
+			#{corporateId},
+			#{accountname},
+			#{password},
+			#{name},
+			#{mobilePhone},
+			#{qqId},
+			#{type},
+			#{status},
+			#{roleId},
+			#{sex},
+			#{depcd},
+			#{createUserId},
+			#{createTime},
+			#{updateUserId},
+			#{delFlag},
+			#{updateTime}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from t_platformuser
+		where 
+			platformuser_id = #{value}
+	</delete>
+
+	
+	<!-- 删除-->
+	<update id="deleteLogical" parameterType="java.lang.Long">
+		update t_platformuser set del_flag=1
+		where platform_user_id = #{value}
+	</update>
+	
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="Platformuser">
+		update t_platformuser
+			set 
+			<if test="corporateId!=null">
+				corporate_id = #{corporateId},
+			</if>
+			<if test="accountname!=null and accountname!=''">
+				accountname = #{accountname},
+			</if>
+			<if test="password!=null and password!=''">
+				password = #{password},
+			</if>
+			<if test="name!=null and name!=''">
+				name = #{name},
+			</if>
+			<if test="mobilePhone!=null and mobilePhone!=''">
+				mobile_phone = #{mobilePhone},
+			</if>
+			qq_id = #{qqId},
+			<if test="sex!=null">
+				sex = #{sex},
+			</if>
+			<if test="depcd!=null">
+				depcd = #{depcd},
+			</if>
+			<if test="type!=null">
+				type = #{type},
+			</if>
+			<if test="status!=null">
+				status = #{status},
+			</if>
+			<if test="roleId!=null">
+				role_id = #{roleId},
+			</if>
+			platform_user_id = platform_user_id
+			where 
+				platform_user_id = #{platformuserId}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="platformuserResultMap">
+		select * from 
+			t_platformuser
+		where 
+			platform_user_id = #{value}
+	</select>
+	
+	<!-- 通过id获取数据 -->
+	<select id="findByCondition" parameterType="Platformuser" resultMap="platformuserResultMap">
+		select * from 
+				t_platformuser where del_flag=0 
+			<if test="corporateId!=null">
+				and corporate_id = #{corporateId}
+			</if>
+			<if test="accountname!=null and accountname!=''">
+				and accountname = #{accountname}
+			</if>
+			<if test="password!=null and password!=''">
+				and password = #{password}
+			</if>
+			<if test="name!=null and name!=''">
+				and name = #{name}
+			</if>
+			<if test="mobilePhone!=null and mobilePhone!=''">
+				and mobile_phone = #{mobilePhone}
+			</if>
+			<if test="qqId!=null and qqId!=''">
+				and qq_id = #{qqId}
+			</if>
+			<if test="type!=null">
+				and type = #{type}
+			</if>
+			<if test="status!=null">
+				and status = #{status}
+			</if>
+			<if test="roleId!=null">
+				and role_id = #{roleId}
+			</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="platformuserResultMap">
+		select a.*,r.role_name,d.dic_name from 
+				t_platformuser a
+		left join t_role r  ON a.role_id = r.role_id
+		left join t_dictionary d ON a.depcd = d.dic_id
+		 where a.del_flag=0 and r.role_level=2
+		<if test="pd.accountname!=null and pd.accountname!=''"><!-- 名称检索 -->
+			and a.accountname like concat('%',#{pd.accountname},'%')
+		</if>
+		<if test="pd.mobilePhone!=null and pd.mobilePhone!=''"><!-- 手机号检索 -->
+			and a.mobile_phone like concat('%',#{pd.mobilePhone},'%')
+		</if>	
+		<if test="pd.type!=null and pd.type>=0"><!-- 类型检索 -->
+			and a.type = #{pd.type}
+		</if>	
+		<if test="pd.roleId!=null and pd.roleId!=''"><!-- 角色检索 -->
+			and a.role_id = #{pd.roleId}
+		</if>
+			order by a.create_time desc 
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="platformuserResultMap">
+		select * from t_platformuser a
+	</select>
+	
+	<!-- 批量删除 -->
+	<update id="deleteLogicalBatch" parameterType="String">
+		update t_platformuser set del_flag=1  
+		where 
+			platform_user_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	<!-- 更改密码 -->
+	<update id="changePw" parameterType="Platformuser" >
+		update t_platformuser set 
+			<if test="password!=null and password!=''">
+				password = #{password}
+			</if>
+		where 
+			platform_user_id = #{platformuserId}
+	</update>
+	
+	<!-- 设置角色 -->
+	<update id="changeRole" parameterType="java.lang.Long">
+		update t_platformuser set 
+			type=0
+		where 
+			platform_user_id = #{platformuserId}
+	</update>
+	
+	<!-- 还原角色 -->
+	<update id="resetRole" parameterType="java.lang.Long">
+		update t_platformuser set 
+			type=1
+		where 
+			platform_user_id = #{platformuserId}
+	</update>
+	
+</mapper>

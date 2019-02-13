@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="XiaoshanInHospitalInfoMapper">
+	<resultMap type="XiaoshanInHospitalInfo" id="xiaoshanInHospitalInfoResultMap">
+		<id column="id" property="id"/>
+		<result column="pid" property="pid"/>
+		<result column="insuranceNo" property="insuranceNo"/>
+		<result column="patientName" property="patientName"/>
+		<result column="tmpFlag" property="tmpFlag"/>
+		<result column="lastName" property="lastName"/>
+		<result column="firstName" property="firstName"/>
+		<result column="py" property="py"/>
+		<result column="wb" property="wb"/>
+		<result column="sexCode" property="sexCode"/>
+		<result column="sex" property="sex"/>
+		<result column="dateOfBirth" property="dateOfBirth"/>
+		<result column="timeOfBirth" property="timeOfBirth"/>
+		<result column="marriageStatusCode" property="marriageStatusCode"/>
+		<result column="marriageStatus" property="marriageStatus"/>
+		<result column="occupationCode" property="occupationCode"/>
+		<result column="occupation" property="occupation"/>
+		<result column="nationalityCode" property="nationalityCode"/>
+		<result column="nationality" property="nationality"/>
+		<result column="countryCode" property="countryCode"/>
+		<result column="country" property="country"/>
+		<result column="birthPlace" property="birthPlace"/>
+		<result column="nativePlace" property="nativePlace"/>
+		<result column="bloodType" property="bloodType"/>
+		<result column="certType" property="certType"/>
+		<result column="certNo" property="certNo"/>
+		<result column="feeTypeCode" property="feeTypeCode"/>
+		<result column="feeType" property="feeType"/>
+		<result column="company" property="company"/>
+		<result column="businessAddress" property="businessAddress"/>
+		<result column="businessPostCode" property="businessPostCode"/>
+		<result column="businessPhone" property="businessPhone"/>
+		<result column="homeAddressCode" property="homeAddressCode"/>
+		<result column="homeAddress" property="homeAddress"/>
+		<result column="homePostCode" property="homePostCode"/>
+		<result column="mobilePhone" property="mobilePhone"/>
+		<result column="contact" property="contact"/>
+		<result column="relationCode" property="relationCode"/>
+		<result column="relation" property="relation"/>
+		<result column="contactMethod" property="contactMethod"/>
+		<result column="operatorId" property="operatorId"/>
+		<result column="operator" property="operator"/>
+		<result column="operatorTime" property="operatorTime"/>
+        <result column="create_user_id" property="createUserId"/>
+        <result column="create_time" property="createTime"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="XiaoshanInHospitalInfo" useGeneratedKeys="true" keyProperty="id">
+		insert into xiaoshan_inhospital_info(
+        pid,
+        insuranceNo,
+        patientName,
+        tmpFlag,
+        lastName,
+        firstName,
+        py,
+        wb,
+        sexCode,
+        sex,
+        dateOfBirth,
+        timeOfBirth,
+        marriageStatusCode,
+        marriageStatus,
+        occupationCode,
+        occupation,
+        nationalityCode,
+        nationality,
+        countryCode,
+        country,
+        birthPlace,
+        nativePlace,
+        bloodType,
+        certType,
+        certNo,
+        feeTypeCode,
+        feeType,
+        company,
+        businessAddress,
+        businessPostCode,
+        businessPhone,
+        homeAddressCode,
+        homeAddress,
+        homePostCode,
+        mobilePhone,
+        contact,
+        relationCode,
+        relation,
+        contactMethod,
+        operatorId,
+        operator,
+        operatorTime,
+        create_user_id,
+        create_time
+		) values (
+            #{pid},
+            #{insuranceNo},
+            #{patientName},
+            #{tmpFlag},
+            #{lastName},
+            #{firstName},
+            #{py},
+            #{wb},
+            #{sexCode},
+            #{sex},
+            #{dateOfBirth},
+            #{timeOfBirth},
+            #{marriageStatusCode},
+            #{marriageStatus},
+            #{occupationCode},
+            #{occupation},
+            #{nationalityCode},
+            #{nationality},
+            #{countryCode},
+            #{country},
+            #{birthPlace},
+            #{nativePlace},
+            #{bloodType},
+            #{certType},
+            #{certNo},
+            #{feeTypeCode},
+            #{feeType},
+            #{company},
+            #{businessAddress},
+            #{businessPostCode},
+            #{businessPhone},
+            #{homeAddressCode},
+            #{homeAddress},
+            #{homePostCode},
+            #{mobilePhone},
+            #{contact},
+            #{relationCode},
+            #{relation},
+            #{contactMethod},
+            #{operatorId},
+            #{operator},
+            #{operatorTime},
+        #{createUserId},
+        #{createTime}
+		)
+	</insert>
+
+    <!--批量新增-->
+    <insert id="batchSave" parameterType="java.util.List">
+        insert into xiaoshan_inhospital_info(
+            pid,
+            insuranceNo,
+            patientName,
+            tmpFlag,
+            lastName,
+            firstName,
+            py,
+            wb,
+            sexCode,
+            sex,
+            dateOfBirth,
+            timeOfBirth,
+            marriageStatusCode,
+            marriageStatus,
+            occupationCode,
+            occupation,
+            nationalityCode,
+            nationality,
+            countryCode,
+            country,
+            birthPlace,
+            nativePlace,
+            bloodType,
+            certType,
+            certNo,
+            feeTypeCode,
+            feeType,
+            company,
+            businessAddress,
+            businessPostCode,
+            businessPhone,
+            homeAddressCode,
+            homeAddress,
+            homePostCode,
+            mobilePhone,
+            contact,
+            relationCode,
+            relation,
+            contactMethod,
+            operatorId,
+            operator,
+            operatorTime,
+            create_user_id,
+            create_time
+        )
+        values
+        <foreach collection ="list" item="item" index= "index" separator =",">
+        (
+            #{item.pid},
+            #{item.insuranceNo},
+            #{item.patientName},
+            #{item.tmpFlag},
+            #{item.lastName},
+            #{item.firstName},
+            #{item.py},
+            #{item.wb},
+            #{item.sexCode},
+            #{item.sex},
+            #{item.dateOfBirth},
+            #{item.timeOfBirth},
+            #{item.marriageStatusCode},
+            #{item.marriageStatus},
+            #{item.occupationCode},
+            #{item.occupation},
+            #{item.nationalityCode},
+            #{item.nationality},
+            #{item.countryCode},
+            #{item.country},
+            #{item.birthPlace},
+            #{item.nativePlace},
+            #{item.bloodType},
+            #{item.certType},
+            #{item.certNo},
+            #{item.feeTypeCode},
+            #{item.feeType},
+            #{item.company},
+            #{item.businessAddress},
+            #{item.businessPostCode},
+            #{item.businessPhone},
+            #{item.homeAddressCode},
+            #{item.homeAddress},
+            #{item.homePostCode},
+            #{item.mobilePhone},
+            #{item.contact},
+            #{item.relationCode},
+            #{item.relation},
+            #{item.contactMethod},
+            #{item.operatorId},
+            #{item.operator},
+            #{item.operatorTime},
+            #{item.createUserId},
+            #{item.createTime}
+        )
+        </foreach>
+    </insert>
+
+	<!-- 删除-->
+	<update id="delete" parameterType="java.lang.Long">
+		delete from xiaoshan_inhospital_info
+		where 
+			id = #{value}
+	</update>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="XiaoshanInHospitalInfo">
+		update xiaoshan_inhospital_info
+			set 
+			<if test="pid!=null and pid!=''">
+				pid = #{pid},
+			</if>
+			<if test="insuranceNo!=null and insuranceNo!=''">
+				insuranceNo = #{insuranceNo},
+			</if>
+			<if test="patientName!=null and patientName!=''">
+				patientName = #{patientName},
+			</if>
+			<if test="tmpFlag!=null and tmpFlag!=''">
+				tmpFlag = #{tmpFlag},
+			</if>
+			<if test="lastName!=null and lastName!=''">
+				lastName = #{lastName},
+			</if>
+			<if test="firstName!=null and firstName!=''">
+				firstName = #{firstName},
+			</if>
+			<if test="py!=null and py!=''">
+				py = #{py},
+			</if>
+			<if test="wb!=null and wb!=''">
+				wb = #{wb},
+			</if>
+			<if test="sexCode!=null and sexCode!=''">
+				sexCode = #{sexCode},
+			</if>
+			<if test="sex!=null and sex!=''">
+				sex = #{sex},
+			</if>
+			<if test="dateOfBirth!=null and dateOfBirth!=''">
+				dateOfBirth = #{dateOfBirth},
+			</if>
+			<if test="timeOfBirth!=null and timeOfBirth!=''">
+				timeOfBirth = #{timeOfBirth},
+			</if>
+			<if test="marriageStatusCode!=null and marriageStatusCode!=''">
+				marriageStatusCode = #{marriageStatusCode},
+			</if>
+			<if test="marriageStatus!=null and marriageStatus!=''">
+				marriageStatus = #{marriageStatus},
+			</if>
+			<if test="occupationCode!=null and occupationCode!=''">
+				occupationCode = #{occupationCode},
+			</if>
+			<if test="occupation!=null and occupation!=''">
+				occupation = #{occupation},
+			</if>
+			<if test="nationalityCode!=null and nationalityCode!=''">
+				nationalityCode = #{nationalityCode},
+			</if>
+			<if test="nationality!=null and nationality!=''">
+				nationality = #{nationality},
+			</if>
+			<if test="countryCode!=null and countryCode!=''">
+				countryCode = #{countryCode},
+			</if>
+			<if test="country!=null and country!=''">
+				country = #{country},
+			</if>
+			<if test="birthPlace!=null and birthPlace!=''">
+				birthPlace = #{birthPlace},
+			</if>
+			<if test="nativePlace!=null and nativePlace!=''">
+				nativePlace = #{nativePlace},
+			</if>
+			<if test="bloodType!=null and bloodType!=''">
+				bloodType = #{bloodType},
+			</if>
+			<if test="certType!=null and certType!=''">
+				certType = #{certType},
+			</if>
+			<if test="certNo!=null and certNo!=''">
+				certNo = #{certNo},
+			</if>
+			<if test="feeTypeCode!=null and feeTypeCode!=''">
+				feeTypeCode = #{feeTypeCode},
+			</if>
+			<if test="feeType!=null and feeType!=''">
+				feeType = #{feeType},
+			</if>
+			<if test="company!=null and company!=''">
+				company = #{company},
+			</if>
+			<if test="businessAddress!=null and businessAddress!=''">
+				businessAddress = #{businessAddress},
+			</if>
+			<if test="businessPostCode!=null and businessPostCode!=''">
+				businessPostCode = #{businessPostCode},
+			</if>
+			<if test="businessPhone!=null and businessPhone!=''">
+				businessPhone = #{businessPhone},
+			</if>
+			<if test="homeAddressCode!=null and homeAddressCode!=''">
+				homeAddressCode = #{homeAddressCode},
+			</if>
+			<if test="homeAddress!=null and homeAddress!=''">
+				homeAddress = #{homeAddress},
+			</if>
+			<if test="homePostCode!=null and homePostCode!=''">
+				homePostCode = #{homePostCode},
+			</if>
+			<if test="mobilePhone!=null and mobilePhone!=''">
+				mobilePhone = #{mobilePhone},
+			</if>
+			<if test="contact!=null and contact!=''">
+				contact = #{contact},
+			</if>
+			<if test="relationCode!=null and relationCode!=''">
+				relationCode = #{relationCode},
+			</if>
+			<if test="relation!=null and relation!=''">
+				relation = #{relation},
+			</if>
+			<if test="contactMethod!=null and contactMethod!=''">
+				contactMethod = #{contactMethod},
+			</if>
+			<if test="operatorId!=null and operatorId!=''">
+				operatorId = #{operatorId},
+			</if>
+			<if test="operator!=null and operator!=''">
+				operator = #{operator},
+			</if>
+			<if test="operatorTime!=null and operatorTime!=''">
+				operatorTime = #{operatorTime},
+			</if>
+			id = id
+			where 
+				id = #{id}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="xiaoshanInHospitalInfoResultMap">
+		select * from 
+			xiaoshan_inhospital_info
+		where 
+			id = #{value}
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="findByCondition" parameterType="XiaoshanInHospitalInfo" resultMap="xiaoshanInHospitalInfoResultMap">
+		select * from 
+			xiaoshan_inhospital_info where 1=1
+			<if test="createUserId!=null and createUserId!=''">
+				and create_user_id = #{createUserId}
+			</if>
+			<if test="pid!=null and pid!=''">
+				and pid = #{pid}
+			</if>
+			<if test="insuranceNo!=null and insuranceNo!=''">
+				and insuranceNo = #{insuranceNo}
+			</if>
+			<if test="patientName!=null and patientName!=''">
+				and patientName = #{patientName}
+			</if>
+			<if test="tmpFlag!=null and tmpFlag!=''">
+				and tmpFlag = #{tmpFlag}
+			</if>
+			<if test="lastName!=null and lastName!=''">
+				and lastName = #{lastName}
+			</if>
+			<if test="firstName!=null and firstName!=''">
+				and firstName = #{firstName}
+			</if>
+			<if test="py!=null and py!=''">
+				and py = #{py}
+			</if>
+			<if test="wb!=null and wb!=''">
+				and wb = #{wb}
+			</if>
+			<if test="sexCode!=null and sexCode!=''">
+				and sexCode = #{sexCode}
+			</if>
+			<if test="sex!=null and sex!=''">
+				and sex = #{sex}
+			</if>
+			<if test="dateOfBirth!=null and dateOfBirth!=''">
+				and dateOfBirth = #{dateOfBirth}
+			</if>
+			<if test="timeOfBirth!=null and timeOfBirth!=''">
+				and timeOfBirth = #{timeOfBirth}
+			</if>
+			<if test="marriageStatusCode!=null and marriageStatusCode!=''">
+				and marriageStatusCode = #{marriageStatusCode}
+			</if>
+			<if test="marriageStatus!=null and marriageStatus!=''">
+				and marriageStatus = #{marriageStatus}
+			</if>
+			<if test="occupationCode!=null and occupationCode!=''">
+				and occupationCode = #{occupationCode}
+			</if>
+			<if test="occupation!=null and occupation!=''">
+				and occupation = #{occupation}
+			</if>
+			<if test="nationalityCode!=null and nationalityCode!=''">
+				and nationalityCode = #{nationalityCode}
+			</if>
+			<if test="nationality!=null and nationality!=''">
+				and nationality = #{nationality}
+			</if>
+			<if test="countryCode!=null and countryCode!=''">
+				and countryCode = #{countryCode}
+			</if>
+			<if test="country!=null and country!=''">
+				and country = #{country}
+			</if>
+			<if test="birthPlace!=null and birthPlace!=''">
+				and birthPlace = #{birthPlace}
+			</if>
+			<if test="nativePlace!=null and nativePlace!=''">
+				and nativePlace = #{nativePlace}
+			</if>
+			<if test="bloodType!=null and bloodType!=''">
+				and bloodType = #{bloodType}
+			</if>
+			<if test="certType!=null and certType!=''">
+				and certType = #{certType}
+			</if>
+			<if test="certNo!=null and certNo!=''">
+				and certNo = #{certNo}
+			</if>
+			<if test="feeTypeCode!=null and feeTypeCode!=''">
+				and feeTypeCode = #{feeTypeCode}
+			</if>
+			<if test="feeType!=null and feeType!=''">
+				and feeType = #{feeType}
+			</if>
+			<if test="company!=null and company!=''">
+				and company = #{company}
+			</if>
+			<if test="businessAddress!=null and businessAddress!=''">
+				and businessAddress = #{businessAddress}
+			</if>
+			<if test="businessPostCode!=null and businessPostCode!=''">
+				and businessPostCode = #{businessPostCode}
+			</if>
+			<if test="businessPhone!=null and businessPhone!=''">
+				and businessPhone = #{businessPhone}
+			</if>
+			<if test="homeAddressCode!=null and homeAddressCode!=''">
+				and homeAddressCode = #{homeAddressCode}
+			</if>
+			<if test="homeAddress!=null and homeAddress!=''">
+				and homeAddress = #{homeAddress}
+			</if>
+			<if test="homePostCode!=null and homePostCode!=''">
+				and homePostCode = #{homePostCode}
+			</if>
+			<if test="mobilePhone!=null and mobilePhone!=''">
+				and mobilePhone = #{mobilePhone}
+			</if>
+			<if test="contact!=null and contact!=''">
+				and contact = #{contact}
+			</if>
+			<if test="relationCode!=null and relationCode!=''">
+				and relationCode = #{relationCode}
+			</if>
+			<if test="relation!=null and relation!=''">
+				and relation = #{relation}
+			</if>
+			<if test="contactMethod!=null and contactMethod!=''">
+				and contactMethod = #{contactMethod}
+			</if>
+			<if test="operatorId!=null and operatorId!=''">
+				and operatorId = #{operatorId}
+			</if>
+			<if test="operator!=null and operator!=''">
+				and operator = #{operator}
+			</if>
+			<if test="operatorTime!=null and operatorTime!=''">
+				and operatorTime = #{operatorTime}
+			</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="xiaoshanInHospitalInfoResultMap">
+		select * from 
+				xiaoshan_inhospital_info a where 1=1
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.name like concat('%',#{pd.query_key},'%')
+		</if>
+			order by a.create_time desc	
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="xiaoshanInHospitalInfoResultMap">
+		select * from xiaoshan_inhospital_info a
+	</select>
+	
+	<!-- 批量删除 -->
+	<update id="deleteBatch" parameterType="String">
+		delete from xiaoshan_inhospital_info
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+</mapper>

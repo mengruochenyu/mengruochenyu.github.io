@@ -1,0 +1,572 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberOrderMapper">
+	<resultMap type="MemberOrder" id="memberOrderResultMap">
+		<id column="id" property="id"/>
+		<result column="number" property="number"/>
+		<result column="report_number" property="reportNumber"/>
+		<result column="member_id" property="memberId"/>
+		<result column="doctor_id" property="doctorId"/>
+		<result column="patient_item_id" property="patientItemId"/>
+		<result column="is_share" property="isShare"/>
+		<result column="package_id" property="packageId"/>
+		<result column="package_name" property="packageName"/>
+		<result column="sheet_name_str" property="sheetNameStr"/>
+		<result column="build_time" property="buildTime"/>
+		<result column="pay_amount" property="payAmount"/>
+		<result column="pay_type" property="payType"/>
+		<result column="status" property="status"/>
+		<result column="pay_account" property="payAccount"/>
+		<result column="pay_trade_no" property="payTradeNo"/>
+		<result column="pay_time" property="payTime"/>
+		<result column="check_begin_time" property="checkBeginTime"/>
+		<result column="check_finish_time" property="checkFinishTime"/>
+		<result column="audit_time" property="auditTime"/>
+		<result column="drawback_application_time" property="drawbackApplicationTime"/>
+		<result column="drawback_finish_time" property="drawbackFinishTime"/>
+		<result column="del_flag" property="delFlag"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="MemberOrder" useGeneratedKeys="true" 
+		keyProperty="id">
+		insert into p_member_order(
+			number,
+			report_number,
+			member_id,
+			doctor_id,
+			patient_item_id,
+			is_share,
+			package_id,
+			package_name,
+			sheet_name_str,
+			build_time,
+			pay_amount,
+			pay_type,
+			status,
+			pay_account,
+			pay_trade_no,
+			pay_time,
+			check_begin_time,
+			check_finish_time,
+			audit_time,
+			drawback_application_time,
+			drawback_finish_time,
+			create_user_id,
+			create_time
+		) values (
+			#{number},
+			#{reportNumber},
+			#{memberId},
+			#{doctorId},
+			#{patientItemId},
+			#{isShare},
+			#{packageId},
+			#{packageName},
+			#{sheetNameStr},
+			#{buildTime},
+			#{payAmount},
+			#{payType},
+			#{status},
+			#{payAccount},
+			#{payTradeNo},
+			#{payTime},
+			#{checkBeginTime},
+			#{checkFinishTime},
+			#{auditTime},
+			#{drawbackApplicationTime},
+			#{drawbackFinishTime},
+			#{createUserId},
+			#{createTime}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from p_member_order
+		where
+				id = #{value}
+	</delete>
+	
+	<!-- 软删除-->
+	<update id="deleteLogical" parameterType="java.lang.Long">
+		update p_member_order set del_flag=1
+		where id = #{value}
+	</update>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="MemberOrder">
+		update p_member_order
+			set 
+			<if test="number!=null">
+				`number` = #{number},
+			</if>
+			<if test="reportNumber!=null">
+				`report_number` = #{reportNumber},
+			</if>
+			<if test="memberId!=null">
+				`member_id` = #{memberId},
+			</if>
+			<if test="doctorId!=null">
+				`doctor_id` = #{doctorId},
+			</if>
+			<if test="patientItemId!=null">
+				`patient_item_id` = #{patientItemId},
+			</if>
+			<if test="isShare!=null">
+				`is_share` = #{isShare},
+			</if>
+			<if test="packageId!=null">
+				`package_id` = #{packageId},
+			</if>
+			<if test="packageName!=null and packageName!=''">
+				`package_name` = #{packageName},
+			</if>
+			
+			<if test="sheetNameStr!=null and sheetNameStr!=''">
+				`sheet_name_str` = #{sheetNameStr},
+			</if>
+			
+			<if test="buildTime!=null">
+				`build_time` = #{buildTime},
+			</if>
+			<if test="payAmount!=null">
+				`pay_amount` = #{payAmount},
+			</if>
+			<if test="payType!=null">
+				`pay_type` = #{payType},
+			</if>
+			<if test="status!=null">
+				`status` = #{status},
+			</if>
+			<if test="payAccount!=null and payAccount!=''">
+				`pay_account` = #{payAccount},
+			</if>
+			
+			<if test="payTradeNo!=null and payTradeNo!=''">
+				`pay_trade_no` = #{payTradeNo},
+			</if>
+			
+			<if test="payTime!=null">
+				`pay_time` = #{payTime},
+			</if>
+			<if test="checkBeginTime!=null">
+				`check_begin_time` = #{checkBeginTime},
+			</if>
+			<if test="checkFinishTime!=null">
+				`check_finish_time` = #{checkFinishTime},
+			</if>
+			<if test="auditTime!=null">
+				`audit_time` = #{auditTime},
+			</if>
+			<if test="drawbackApplicationTime!=null">
+				`drawback_application_time` = #{drawbackApplicationTime},
+			</if>
+			<if test="drawbackFinishTime!=null">
+				`drawback_finish_time` = #{drawbackFinishTime},
+			</if>
+		<if test="updateUserId!=null and updateUserId!=''">
+			update_user_id = #{updateUserId},
+		</if>
+		<if test="updateTime!=null">
+			update_time = #{updateTime},
+		</if>
+			id = id
+			where
+				id = #{id}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="memberOrderResultMap">
+		select * from 
+			p_member_order
+		where 
+			id = #{value}
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="findByCondition" parameterType="MemberOrder" resultMap="memberOrderResultMap">
+		select * from 
+			p_member_order where del_flag=0
+			<if test="number!=null">
+				and `number` = #{number}
+			</if>
+			<if test="reportNumber!=null">
+				and `report_number` = #{reportNumber} 
+			</if>
+			<if test="memberId!=null">
+				and `member_id` = #{memberId}
+			</if>
+			<if test="doctorId!=null">
+				and `doctor_id` = #{doctorId}
+			</if>
+			<if test="patientItemId!=null">
+				and `patient_item_id` = #{patientItemId}
+			</if>
+			<if test="isShare!=null">
+				and `is_share` = #{isShare}
+			</if>
+			<if test="packageId!=null">
+				and `package_id` = #{packageId}
+			</if>
+			<if test="packageName!=null and packageName!=''">
+				and `package_name` = #{packageName}
+			</if>
+			<if test="sheetNameStr!=null and sheetNameStr!=''">
+				and `sheet_name_str` = #{sheetNameStr}
+			</if>
+			<if test="buildTime!=null">
+				`build_time` = #{buildTime},
+			</if>
+			<if test="payAmount!=null">
+				and `pay_amount` = #{payAmount}
+			</if>
+			<if test="payType!=null">
+				and `pay_type` = #{payType}
+			</if>
+			<if test="status!=null">
+				and `status` = #{status}
+			</if>
+			<if test="payAccount!=null and payAccount!=''">
+				and `pay_account` = #{payAccount}
+			</if>
+			<if test="payTradeNo!=null and payTradeNo!=''">
+				and `pay_trade_no` = #{payTradeNo}
+			</if>
+			<if test="payTime!=null">
+				`pay_time` = #{payTime},
+			</if>
+			<if test="checkBeginTime!=null">
+				`check_begin_time` = #{checkBeginTime},
+			</if>
+			<if test="checkFinishTime!=null">
+				`check_finish_time` = #{checkFinishTime},
+			</if>
+			<if test="auditTime!=null">
+				`audit_time` = #{auditTime},
+			</if>
+			<if test="drawbackApplicationTime!=null">
+				`drawback_application_time` = #{drawbackApplicationTime},
+			</if>
+			<if test="drawbackFinishTime!=null">
+				`drawback_finish_time` = #{drawbackFinishTime},
+			</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="memberOrderResultMap">
+		select * from 
+				p_member_order a where del_flag=0
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.name like concat('%',#{pd.query_key},'%')
+		</if>
+		<if test="pd.query_key_number != null and pd.query_key_number != ''"><!-- number按订单号检索 -->
+			and a.number like concat('%',#{pd.query_key_number},'%')
+		</if>
+		<if test="pd.query_key_package_name!=null and pd.query_key_package_name!=''"><!-- package_name 按照套餐名称检索 -->
+			and a.package_name like concat('%',#{pd.query_key_package_name},'%')
+		</if>
+		<if test="pd.query_key_sheet_name_str != null and pd.query_key_sheet_name_str !=''"><!-- sheetNameStr 按照套餐组成检索 -->
+			and a.sheet_name_str like concat('%',#{pd.query_key_sheet_name_str},'%')  
+		</if>
+		<if test="pd.query_key_status !=null and pd.query_key_status !=''"><!-- status 按照订单状态检索 -->
+			and a.status like concat('%',#{pd.query_key_status},'%')
+		</if>
+		<if test="pd.query_key_pay_account !=null and pd.query_key_pay_account !=''"><!-- pay_account 按照支付账号检索 -->
+			and a.pay_account like concat('%',#{pd.query_key_pay_account},'%')
+		</if>
+		<if test="pd.query_key_doctor_name !=null and pd.query_key_doctor_name !=''"><!-- query_key_doctor_name 用户姓名 -->
+			and a.doctor_id in (SELECT id FROM p_doctor pd WHERE pd.name like concat('%',#{pd.query_key_doctor_name},'%'))
+		</if>
+		<if test="pd.query_key_member_name !=null and pd.query_key_member_name !=''"><!-- query_key_member_name 按照医生姓名检索 -->
+			and a.member_id in (SELECT id FROM p_member pm WHERE pm.name like concat('%',#{pd.query_key_member_name},'%'))
+		</if>
+			order by number desc
+	</select>
+	
+	<!-- 伪通过id获取数据 -->
+	<select id="fakeFindById" parameterType="java.lang.Long" resultType="map">
+		select 
+			a.id,
+			a.number,
+			a.report_number AS reportNumber,
+			a.member_id AS memberId,
+			a.doctor_id AS doctorId,
+			(SELECT p.name from p_member p where a.member_id = p.id )AS memberName,
+			(SELECT d.name from p_doctor d where a.doctor_id = d.id )AS doctorName,
+			a.patient_item_id AS patientItemId,
+			a.package_id AS packageId,
+			a.package_name AS packageName,
+			a.sheet_name_str AS sheetNameStr,
+			a.build_time AS buildTime,
+			a.pay_amount AS payAmount,
+			a.pay_type AS payType,
+			a.status AS status,
+			a.pay_account AS payAccount,
+			a.pay_trade_no AS payTradeNo,
+			a.pay_time AS payTime,
+			a.check_begin_time AS checkBeginTime,
+			a.check_finish_time AS checkFinishTime,
+			a.audit_time AS auditTime,
+			a.drawback_application_time AS drawbackApplicationTime,
+			a.drawback_finish_time AS drawbackFinishTime
+		from p_member_order a where 
+			id = #{value}
+	</select>
+	
+	<!-- 伪列表 -->
+	<select id="fakeDatalistPage" parameterType="page" resultType="map">
+		select 
+			a.id,
+			a.number,
+			a.report_number AS reportNumber,
+			a.member_id AS memberId,
+			a.doctor_id AS doctorId,
+			(SELECT p.name from p_member p where a.member_id = p.id )AS memberName,
+			(SELECT d.name from p_doctor d where a.doctor_id = d.id )AS doctorName,
+			a.patient_item_id AS patientItemId,
+			a.package_id AS packageId,
+			a.package_name AS packageName,
+			a.sheet_name_str AS sheetNameStr,
+			a.build_time AS buildTime,
+			a.pay_amount AS payAmount,
+			a.pay_type AS payType,
+			a.status AS status,
+			a.pay_account AS payAccount,
+			a.pay_trade_no AS payTradeNo,
+			a.pay_time AS payTime,
+			a.check_begin_time AS checkBeginTime,
+			a.check_finish_time AS checkFinishTime,
+			a.audit_time AS auditTime,
+			a.drawback_application_time AS drawbackApplicationTime,
+			a.drawback_finish_time AS drawbackFinishTime
+		from p_member_order a where del_flag=0 
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.name like concat('%',#{pd.query_key},'%')
+		</if>
+		<if test="pd.query_key_number != null and pd.query_key_number != ''"><!-- number按订单号检索 -->
+			and a.number like concat('%',#{pd.query_key_number},'%')
+		</if>
+		<if test="pd.query_key_package_name!=null and pd.query_key_package_name!=''"><!-- package_name 按照套餐名称检索 -->
+			and a.package_name like concat('%',#{pd.query_key_package_name},'%')
+		</if>
+		<if test="pd.query_key_sheet_name_str != null and pd.query_key_sheet_name_str !=''"><!-- sheetNameStr 按照套餐组成检索 -->
+			and a.sheet_name_str like concat('%',#{pd.query_key_sheet_name_str},'%')  
+		</if>
+		<if test="pd.query_key_status !=null and pd.query_key_status !=''"><!-- status 按照订单状态检索 -->
+			and a.status like concat('%',#{pd.query_key_status},'%')
+		</if>
+		<if test="pd.query_key_pay_account !=null and pd.query_key_pay_account !=''"><!-- pay_account 按照支付账号检索 -->
+			and a.pay_account like concat('%',#{pd.query_key_pay_account},'%')
+		</if>
+		<if test="pd.query_key_doctor_name !=null and pd.query_key_doctor_name !=''"><!-- query_key_doctor_name 用户姓名 -->
+			and a.doctor_id in (SELECT id FROM p_doctor pd WHERE pd.name like concat('%',#{pd.query_key_doctor_name},'%'))
+		</if>
+		<if test="pd.query_key_member_name !=null and pd.query_key_member_name !=''"><!-- query_key_member_name 按照医生姓名检索 -->
+			and a.member_id in (SELECT id FROM p_member pm WHERE pm.name like concat('%',#{pd.query_key_member_name},'%'))
+		</if>
+			order by number desc
+	</select>
+	<!-- 伪列表:for report -->
+	<select id="fakeReportDatalistPage" parameterType="page" resultType="map">
+		select 
+			a.id,
+			a.number,
+			a.report_number AS reportNumber,
+			a.member_id AS memberId,
+			a.doctor_id AS doctorId,
+			(SELECT p.name from p_member p where a.member_id = p.id )AS memberName,
+			(SELECT d.name from p_doctor d where a.doctor_id = d.id )AS doctorName,
+			a.patient_item_id AS patientItemId,
+			a.package_id AS packageId,
+			a.package_name AS packageName,
+			a.sheet_name_str AS sheetNameStr,
+			a.build_time AS buildTime,
+			a.pay_amount AS payAmount,
+			a.pay_type AS payType,
+			a.status AS status,
+			a.pay_account AS payAccount,
+			a.pay_trade_no AS payTradeNo,
+			a.pay_time AS payTime,
+			a.check_begin_time AS checkBeginTime,
+			a.check_finish_time AS checkFinishTime,
+			a.audit_time AS auditTime,
+			a.drawback_application_time AS drawbackApplicationTime,
+			a.drawback_finish_time AS drawbackFinishTime
+		from p_member_order a where del_flag=0 and a.report_number != ''
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.name like concat('%',#{pd.query_key},'%')
+		</if>
+		<if test="pd.query_key_number != null and pd.query_key_number != ''"><!-- number按订单号检索 -->
+			and a.number like concat('%',#{pd.query_key_number},'%')
+		</if>
+		<if test="pd.query_key_package_name!=null and pd.query_key_package_name!=''"><!-- package_name 按照套餐名称检索 -->
+			and a.package_name like concat('%',#{pd.query_key_package_name},'%')
+		</if>
+		<if test="pd.query_key_sheet_name_str != null and pd.query_key_sheet_name_str !=''"><!-- sheetNameStr 按照套餐组成检索 -->
+			and a.sheet_name_str like concat('%',#{pd.query_key_sheet_name_str},'%')  
+		</if>
+		<if test="pd.query_key_status !=null and pd.query_key_status !=''"><!-- status 按照订单状态检索 -->
+			and a.status like concat('%',#{pd.query_key_status},'%')
+		</if>
+		<if test="pd.query_key_pay_account !=null and pd.query_key_pay_account !=''"><!-- pay_account 按照支付账号检索 -->
+			and a.pay_account like concat('%',#{pd.query_key_pay_account},'%')
+		</if>
+		<if test="pd.query_key_doctor_name !=null and pd.query_key_doctor_name !=''"><!-- query_key_doctor_name 用户姓名 -->
+			and a.doctor_id in (SELECT id FROM p_doctor pd WHERE pd.name like concat('%',#{pd.query_key_doctor_name},'%'))
+		</if>
+		<if test="pd.query_key_report_number !=null and pd.query_key_report_number !=''"><!-- query_key_report_number 检测报告 -->
+			and a.report_number like concat('%',#{pd.query_key_report_number},'%')
+		</if>
+		<if test="pd.query_key_member_name !=null and pd.query_key_member_name !=''"><!-- query_key_member_name 按照医生姓名检索 -->
+			and a.member_id in (SELECT id FROM p_member pm WHERE pm.name like concat('%',#{pd.query_key_member_name},'%'))
+		</if>
+			order by number desc
+	</select>
+	
+	<!-- 列表   导出用 -->
+	<select id="getlistByIdList" parameterType="List" resultType="pd">
+		select 
+			a.id,
+			a.number,
+			a.report_number AS reportNumber,
+			a.member_id AS memberId,
+			a.doctor_id AS doctorId,
+			(SELECT p.name from p_member p where a.member_id = p.id )AS memberName,
+			(SELECT d.name from p_doctor d where a.doctor_id = d.id )AS doctorName,
+			a.patient_item_id AS patientItemId,
+			a.package_id AS packageId,
+			a.package_name AS packageName,
+			a.sheet_name_str AS sheetNameStr,
+			a.build_time AS buildTime,
+			a.pay_amount AS payAmount,
+			a.pay_type AS payType,
+			a.status AS status,
+			a.pay_account AS payAccount,
+			a.pay_trade_no AS payTradeNo,
+			a.pay_time AS payTime,
+			a.check_begin_time AS checkBeginTime,
+			a.check_finish_time AS checkFinishTime,
+			a.audit_time AS auditTime,
+			a.drawback_application_time AS drawbackApplicationTime,
+			a.drawback_finish_time AS drawbackFinishTime
+		from p_member_order a 
+		where del_flag=0 and a.id in 
+		<foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+             #{item}
+		</foreach>
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="memberOrderResultMap">
+		select * from p_member_order a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteBatch" parameterType="String">
+		delete from p_member_order
+		where id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 批量删除 -->
+	<update id="deleteLogicalBatch" parameterType="String">
+		update p_member_order set del_flag=1  
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	<!-- 获取医生的报告数量 -->
+	<select id="countReportByCondotion" parameterType="map" resultType="Integer">
+		select count(*) from p_member_order a 
+		where a.del_flag =0 and (a.status = 4 or a.status = 5)
+		<if test="doctorId!=null">
+			and `doctor_id` = #{doctorId}
+		</if>
+		<if test="memberId!=null">
+			and `member_id` = #{memberId}
+		</if>
+	</select>
+	
+	<!-- 获取医生的报告列表 -->
+	<select id="pagingReportByCondition" parameterType="com.blue.pem.api.entity.PageCondition" resultType="pd">
+		select a.patient_item_id patientItemId, a.report_number number, b.name doctorName, 
+		a.package_name packageName, a.sheet_name_str sheetNameStr, a.check_begin_time checkTime 
+		from p_member_order a 
+		left join p_doctor b on a.doctor_id = b.id 
+		where a.del_flag = 0 and (a.status = 4 or a.status = 5)
+		<if test="condition.doctorId!=null">
+			and `doctor_id` = #{condition.doctorId}
+		</if>
+		<if test="condition.memberId!=null">
+			and `member_id` = #{condition.memberId}
+		</if>
+		order by a.create_time desc
+		limit #{currentResult}, #{pageSize}
+	</select>
+	<!-- 获取订单数量 -->
+	<select id="countByCondotion" parameterType="map" resultType="Integer">
+		select count(*) from p_member_order a 
+		where a.del_flag =0  
+		<if test="status!=null">
+			and `status` = #{status}
+		</if>
+		<if test="doctorId!=null">
+			and `doctor_id` = #{doctorId}
+		</if>
+		<if test="memberId!=null">
+			and `member_id` = #{memberId}
+		</if>
+	</select>
+	
+	<!-- 获取订单列表 -->
+	<select id="pagingByCondition" parameterType="com.blue.pem.api.entity.PageCondition" resultType="pd">
+		select a.id, a.patient_item_id patientItemId, a.member_id memberId, c.name memberName, c.photo_url memberPhotoUrl, a.doctor_id doctorId, 
+		b.name doctorName, b.photo_url doctorPhotoUrl, a.package_name packageName, 
+		a.sheet_name_str sheetNameStr, a.build_time buildTime, a.pay_amount payAmount, a.status 
+		from p_member_order a
+		left join p_doctor b on a.doctor_id = b.id
+		left join p_member c on a.member_id = c.id
+		where a.del_flag = 0
+		<if test="condition.status!=null">
+			and a.`status` = #{condition.status}
+		</if>
+		<if test="condition.doctorId!=null">
+			and a.`doctor_id` = #{condition.doctorId}
+		</if>
+		<if test="condition.memberId!=null">
+			and a.`member_id` = #{condition.memberId}
+		</if>
+		order by a.create_time desc
+		limit #{currentResult}, #{pageSize}
+	</select>
+	
+</mapper>

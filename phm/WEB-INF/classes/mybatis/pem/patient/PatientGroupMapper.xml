@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PatientGroupMapper">
+	<resultMap type="PatientGroup" id="patientGroupResultMap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="account" property="account"/>
+		<result column="password" property="password"/>
+		<result column="version_sign" property="versionSign"/>
+		<result column="docking_name" property="dockingName"/>
+		<result column="docking_phone" property="dockingPhone"/>
+		<result column="address_prov" property="addressProv"/>
+		<result column="address_city" property="addressCity"/>
+		<result column="address_county" property="addressCounty"/>
+		<result column="address_detail" property="addressDetail"/>
+		<result column="industry" property="industry"/>
+		<result column="hospital_id" property="hospitalId"/>
+		<result column="hospital_office_id" property="hospitalOfficeId"/>
+		<result column="hospital_office_name" property="hospitalOfficeName"/>
+		<result column="check_card_type" property="checkCardType"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="input_status" property="inputStatus"/>
+		<result column="allNum" property="allNum"/>
+	</resultMap>
+	<resultMap type="PatientGroupAssembly" id="patientGroupAssemblyResultMap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="hospital_id" property="hospitalId"/>
+		<result column="hospital_name" property="hospitalName"/>
+		<result column="hospital_office_id" property="hospitalOfficeId"/>
+		<result column="hospital_office_name" property="hospitalOfficeName"/>
+		<result column="all_num" property="allNum"/>
+		<result column="done_num" property="doneNum"/>
+		<result column="undone_num" property="undoneNum"/>
+		<result column="create_time" property="createTime"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="PatientGroup" useGeneratedKeys="true" keyProperty="id">
+		insert into patient_group(
+			name,
+			account,
+			password,
+			version_sign,
+			docking_name,
+			docking_phone,
+			address_prov,
+			address_city,
+			address_county,
+			address_detail,
+			industry,
+			hospital_id,
+			hospital_office_id,
+			hospital_office_name,
+			check_card_type,
+			input_status,
+			create_user_id,
+			create_time
+		) values (
+			#{name},
+			#{account},
+			#{password},
+			#{versionSign},
+			#{dockingName},
+			#{dockingPhone},
+			#{addressProv},
+			#{addressCity},
+			#{addressCounty},
+			#{addressDetail},
+			#{industry},
+			#{hospitalId},
+			#{hospitalOfficeId},
+			#{hospitalOfficeName},
+			#{checkCardType},
+			#{inputStatus},
+			#{createUserId},
+			#{createTime}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from patient_group
+		where 
+			id = #{value}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="PatientGroup">
+		update patient_group
+			set 
+			<if test="name!=null and name!=''">
+				name = #{name},
+			</if>
+			<if test="account!=null and account!=''">
+				account = #{account},
+			</if>
+			<if test="password!=null and password!=''">
+				password = #{password},
+			</if>
+			<if test="versionSign !=null">
+				version_sign = #{versionSign},
+			</if>
+			<if test="name!=null and name!=''">
+				name = #{name},
+			</if>
+			<if test="dockingName!=null and dockingName!=''">
+				docking_name = #{dockingName},
+			</if>
+			<if test="dockingPhone!=null and dockingPhone!=''">
+				docking_phone = #{dockingPhone},
+			</if>
+			<if test="addressProv!=null and addressProv!=''">
+				address_prov = #{addressProv},
+			</if>
+			<if test="addressCity!=null and addressCity!=''">
+				address_city = #{addressCity},
+			</if>
+			<if test="addressCounty!=null and addressCounty!=''">
+				address_county = #{addressCounty},
+			</if>
+			<if test="addressDetail!=null and addressDetail!=''">
+				address_detail = #{addressDetail},
+			</if>
+			<if test="industry!=null and industry!=''">
+				industry = #{industry},
+			</if>
+			<if test="hospitalId!=null">
+				hospital_id = #{hospitalId},
+			</if>
+			<if test="hospitalOfficeId!=null">
+				hospital_office_id = #{hospitalOfficeId},
+			</if>
+			<if test="hospitalOfficeName!=null and hospitalOfficeName!=''">
+				hospital_office_name = #{hospitalOfficeName},
+			</if>
+			<if test="checkCardType!=null">
+				check_card_type = #{checkCardType},
+			</if>
+			<if test="inputStatus !=null">
+				input_status = #{inputStatus},
+			</if>
+			id = id
+			where 
+				id = #{id}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="patientGroupResultMap">
+		select * from 
+			patient_group
+		where 
+			id = #{value}
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="findByCondition" parameterType="PatientGroup" resultMap="patientGroupResultMap">
+		select * from 
+			patient_group where 1=1
+			<if test="createUserId!=null and createUserId!=''">
+				and create_user_id = #{createUserId}
+			</if>
+			<if test="name!=null and name!=''">
+				and name = #{name}
+			</if>
+			<if test="account!=null and account!=''">
+				and account = #{account} 
+			</if>
+			<if test="password!=null and password!=''">
+				and password = #{password} 
+			</if>
+			<if test="versionSign!=null and versionSign!=''">
+				and version_sign = #{versionSign} 
+			</if>
+			<if test="dockingName!=null and dockingName!=''">
+				and docking_name = #{dockingName}
+			</if>
+			<if test="dockingPhone!=null and dockingPhone!=''">
+				and docking_phone = #{dockingPhone}
+			</if>
+			<if test="addressProv!=null and addressProv!=''">
+				and address_prov = #{addressProv}
+			</if>
+			<if test="addressCity!=null and addressCity!=''">
+				and address_city = #{addressCity}
+			</if>
+			<if test="addressCounty!=null and addressCounty!=''">
+				and address_county = #{addressCounty}
+			</if>
+			<if test="addressDetail!=null and addressDetail!=''">
+				and address_detail = #{addressDetail}
+			</if>
+			<if test="industry!=null and industry!=''">
+				and industry = #{industry}
+			</if>
+			<if test="hospitalId!=null">
+				and hospital_id = #{hospitalId}
+			</if>
+			<if test="hospitalOfficeId!=null">
+				and hospital_office_id = #{hospitalOfficeId}
+			</if>
+			<if test="hospitalOfficeName!=null and hospitalOfficeName!=''">
+				and hospital_office_name = #{hospitalOfficeName}
+			</if>
+			<if test="checkCardType!=null">
+				and check_card_type = #{checkCardType}
+			</if>
+			<if test="inputStatus !=null">
+				and input_status = #{inputStatus}
+			</if>
+	</select>
+
+    <select id="listByConditionExtra" parameterType="pd" resultMap="patientGroupResultMap">
+        SELECT * FROM patient_group WHERE 1=1
+        <if test="hospitalId!=null">
+            AND hospital_id=#{hospitalId}
+        </if>
+        <if test="hospitalOfficeId!=null">
+            AND hospital_office_id=#{hospitalOfficeId}
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND create_time&gt;=#{startTime}
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND create_time&lt;=#{endTime}
+        </if>
+        <if test="officeId!=null">
+            AND patient_group.hospital_office_id=#{officeId}
+        </if>
+        <if test="departmentId!=null">
+            AND patient_group.hospital_office_id IN (SELECT office_id FROM hospital_depart_office_asso WHERE department_id=#{departmentId})
+        </if>
+    </select>
+
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="patientGroupResultMap">
+		select * from 
+				patient_group a where 1=1
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>
+		<if test="pd.hospital_id !=null and pd.hospital_id !=''"><!-- 医院id过滤 -->
+			and a.hospital_id = #{pd.hospital_id}
+		</if>
+		<if test="pd.name !=null and pd.name !=''"><!-- 医院名称过滤 -->
+			and a.name = #{pd.name}
+		</if>
+		<if test="pd.query_str !=null and pd.query_str !=''"><!-- app关键字检索 -->
+			and 
+			(
+				a.name like concat('%',#{pd.query_str},'%')
+				or
+				a.docking_name like concat('%',#{pd.query_str},'%')
+				or
+				a.docking_phone like concat('%',#{pd.query_str},'%')
+			)
+		</if>
+		<if test="pd.address_prov !=null and pd.address_prov !=''"><!-- app检索省份 -->
+			and a.address_prov =#{pd.address_prov}
+		</if>
+		<if test="pd.address_prov !=null and pd.address_prov !=''"><!-- app检索省份 -->
+			and a.address_prov =#{pd.address_prov}
+		</if>
+		<if test="pd.address_city !=null and pd.address_city !=''"><!-- app检索城市 -->
+			and a.address_city =#{pd.address_city}
+		</if>
+		<if test="pd.address_county !=null and pd.address_county !=''"><!-- app检索区县 -->
+			and a.address_county =#{pd.address_county}
+		</if>
+		<if test="pd.industry !=null and pd.industry !=''"><!-- app检索行业 -->
+			and a.industry =#{pd.industry}
+		</if>
+		<if test="pd.name!=null and pd.name!=''"><!-- 关键字检索 -->
+			and a.name like concat('%',#{pd.name},'%')
+		</if>
+			order by a.create_time desc	
+	</select>
+	<!-- 列表 -->
+	<select id="groupAssemblylistPage" parameterType="page" resultMap="patientGroupAssemblyResultMap">
+        SELECT
+        a.id,
+        a.name,
+        a.hospital_id,
+        b.name 'hospital_name',
+        a.hospital_office_id,
+        c.name 'hospital_office_name',
+        a.create_time,
+        IFNULL(d.all_num,0) 'all_num',
+        IFNULL(e.checked_num,0) 'done_num',
+        IFNULL(d.all_num,0)- IFNULL(e.checked_num,0) 'undone_num'
+        from  patient_group a
+        LEFT JOIN  hospital b  ON  b.id = a.hospital_id
+        LEFT JOIN  hospital_office c  ON  c.id = a.hospital_office_id
+        LEFT JOIN
+        (
+            SELECT  m.group_id,  count(*) 'all_num'
+            FROM  patient_item m
+            group by  m.group_id
+        ) d
+        on  d.group_id = a.id
+        LEFT JOIN
+        (
+            SELECT  j.id 'group_id', count(*) 'checked_num'
+            FROM patient_check_report h
+            LEFT JOIN  patient_item i  ON  i.id = h.patient_item_id
+            LEFT JOIN  patient_group j
+            ON  j.id = i.group_id
+            WHERE  h.check_status =1
+            GROUP BY  j.id
+        )e
+        on  e.group_id = a.id
+        WHERE 1=1
+		<if test="pd.group_name !=null and pd.group_name !=''"><!-- 医院name过滤 -->
+			and a.name = #{pd.group_name}
+		</if>
+		<if test="pd.hospital_name !=null and pd.hospital_name !=''"><!-- 医院name过滤 -->
+			and b.name = #{pd.hospital_name}
+		</if>
+		<if test="pd.hospital_office_name !=null and pd.hospital_office_name !=''"><!-- 科室name过滤 -->
+			and c.name = #{pd.hospital_office_name}
+		</if>
+		<if test="pd.min_num!=null and pd.min_num!=''"><!-- 过滤 -->
+			and d.all_num &gt;= #{pd.min_num}
+		</if>
+		<if test="pd.max_num !=null and pd.max_num !=''"><!-- 过滤 -->
+			and d.all_num &lt;= #{pd.max_num}
+		</if>
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>
+        <if test="pd.ids!=null and pd.ids!=''">
+            AND a.id IN (${pd.ids})
+        </if>
+			order by a.create_time desc	
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="patientGroupResultMap">
+		select * from patient_group a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteBatch" parameterType="String">
+		delete from patient_group
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 列表 展示每个团队最新的一次数据(根据name组合)-->
+	<select id="grouplistPage" parameterType="page" resultMap="patientGroupResultMap">
+		SELECT
+			b.*
+		FROM
+			patient_group b
+        LEFT JOIN (SELECT ifnull(sum(1),0) AS allNum,group_id FROM patient_item GROUP BY group_id)c ON b.id=c.group_id
+        LEFT JOIN (SELECT ifnull(sum(1),0) AS doneNum,group_id FROM patient_check_report t1,patient_item t2 WHERE t1.patient_item_id=t2.id AND t1.check_status=1 GROUP BY group_id)d ON b.id=d.group_id
+		WHERE 1=1
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and b.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and b.create_time &lt;= #{pd.query_time_end}
+		</if>
+		<if test="pd.hospital_id !=null and pd.hospital_id !=''"><!-- 医院id过滤 -->
+			and b.hospital_id = #{pd.hospital_id}
+		</if>
+		<if test="pd.query_str !=null and pd.query_str !=''"><!-- app关键字检索 -->
+			and 
+			(
+				b.name like concat('%',#{pd.query_str},'%')
+				or
+				b.docking_name like concat('%',#{pd.query_str},'%')
+				or
+				b.docking_phone like concat('%',#{pd.query_str},'%')
+			)
+		</if>
+		<if test="pd.address_prov !=null and pd.address_prov !=''"><!-- app检索省份 -->
+			and b.address_prov =#{pd.address_prov}
+		</if>
+		<if test="pd.address_prov !=null and pd.address_prov !=''"><!-- app检索省份 -->
+			and b.address_prov =#{pd.address_prov}
+		</if>
+		<if test="pd.address_city !=null and pd.address_city !=''"><!-- app检索城市 -->
+			and b.address_city =#{pd.address_city}
+		</if>
+		<if test="pd.address_county !=null and pd.address_county !=''"><!-- app检索区县 -->
+			and b.address_county =#{pd.address_county}
+		</if>
+		<if test="pd.industry !=null and pd.industry !=''"><!-- app检索行业 -->
+			and b.industry =#{pd.industry}
+		</if>
+		<if test="pd.name!=null and pd.name!=''"><!-- 关键字检索 -->
+			and b.name like concat('%',#{pd.name},'%')
+		</if>
+		<if test="pd.isFinished!=null and pd.isFinished==0"><!-- 未完成 -->
+		    AND (IFNULL(c.allNum,0)=0 OR IFNULL(d.doneNum,0)&lt;IFNULL(c.allNum,0))
+        </if>
+		<if test="pd.isFinished!=null and pd.isFinished==1"><!-- 已完成 -->
+		    AND (IFNULL(c.allNum,0)!=0 AND IFNULL(d.doneNum,0)=c.allNum)
+        </if>
+        <if test="pd.officeId!=null">
+            AND b.hospital_office_id=#{pd.officeId}
+        </if>
+        <if test="pd.departmentId!=null">
+            AND b.hospital_office_id IN (SELECT office_id FROM hospital_depart_office_asso WHERE department_id=#{pd.departmentId})
+        </if>
+			order by b.create_time desc
+	</select>
+	
+	    <!--获取patientItem数量-->
+    <select id="getPatientItemNum" parameterType="pd" resultType="int">
+		SELECT 
+			COUNT(*) 'num' 
+		FROM 
+			patient_group a
+		WHERE
+			1=1
+		<if test="startTime !=null and startTime !=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{startTime}
+		</if>
+		<if test="endTime !=null and endTime !=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{endTime}
+		</if>
+		<if test="hospitalOfficeId !=null and hospitalOfficeId !=''"><!--科室检索 -->
+			and a.hospital_office_id = #{hospitalOfficeId}
+		</if>
+    </select>
+	 <!--统计某医院下的已完成团队数量-->
+    <select id="getDoneGroupNum" parameterType="pd" resultType="int">
+        SELECT ifnull(count(1),0) FROM
+        (
+        SELECT
+        count(1) AS count1,
+        a.group_id AS group_id
+        FROM patient_item a
+        INNER JOIN patient_group b ON a.group_id=b.id
+        WHERE a.hospital_id=#{hospitalId} AND a.group_id IS NOT null AND b.id IS NOT NULL
+        GROUP BY a.group_id
+        )t1
+        INNER JOIN(
+            SELECT
+            count(1) AS count2,
+            a.group_id AS group_id
+            FROM patient_item a
+            INNER JOIN patient_check_report b ON a.id=b.patient_item_id AND b.check_status=1
+            WHERE a.hospital_id=#{hospitalId} AND a.group_id IS NOT null
+            GROUP BY a.group_id
+        )t2
+        ON t1.group_id=t2.group_id AND t1.count1=t2.count2 AND t1.count1!=0 AND t2.count2!=0
+        LEFT JOIN patient_group b ON t1.group_id=b.id
+        WHERE 1=1
+        <if test="hospitalOfficeId!=null">
+            and b.hospital_office_id=#{hospitalOfficeId}
+        </if>
+        <if test="departmentId!=null">
+            AND b.hospital_office_id IN (SELECT office_id FROM hospital_depart_office_asso WHERE department_id=#{departmentId})
+        </if>
+        <if test="startTime !=null and startTime !=''"><!-- 时间检索 -->
+            and b.create_time &gt;= concat(#{startTime},"00:00:00")
+        </if>
+        <if test="endTime !=null and endTime !=''"><!-- 时间检索 -->
+            and b.create_time &lt;= concat(#{endTime},"23:59:59")
+        </if>
+    </select>
+    
+	 <!--统计某团队下已检人数-->
+    <select id="getDoneNumOfGroup" parameterType="Long" resultType="int">
+        SELECT
+            count(1)
+        FROM
+        (
+            SELECT
+            a.id
+            FROM
+            patient_item a
+            LEFT JOIN
+            patient_check_report b
+            ON
+            b.patient_item_id = a.id
+            WHERE
+            a.group_id = #{value}
+            AND
+            b.check_status =1
+            group by
+            a.id
+        )a
+    </select>
+    
+    <resultMap type="com.blue.pem.api.entity.GroupDO" id="GroupDOResultMap">
+		<id column="id" property="id"/>
+		<result column="name" property="name"/>
+		<result column="account" property="account"/>
+		<result column="batchCount" property="batchCount"/>
+		<result column="docking_name" property="dockingName"/>
+		<result column="docking_phone" property="dockingPhone"/>
+		<result column="address_prov" property="addressProv"/>
+		<result column="address_city" property="addressCity"/>
+		<result column="address_county" property="addressCounty"/>
+		<result column="address_detail" property="addressDetail"/>
+		<result column="industry" property="industry"/>
+		<result column="hospital_id" property="hospitalId"/>
+		<result column="hospital_office_id" property="hospitalOfficeId"/>
+	</resultMap>
+	
+	<!-- 运营商团体总数量 -->
+    <select id="getGroupCount" parameterType="com.blue.pem.api.entity.PageCondition" resultType="java.lang.Integer">
+        select count(*) from patient_group a 
+        where a.hospital_id = #{condition.hospitalId} and a.version_sign = 2 
+        <if test="condition.searchWord !=null and condition.searchWord !=''"><!--名称检索 -->
+			and a.name like concat('%', #{condition.searchWord}, '%') 
+		</if>
+		<if test="condition.addressProv !=null and condition.addressProv !=''"><!--省份检索 -->
+			and a.address_prov = #{condition.addressProv} 
+		</if>
+		<if test="condition.addressCity !=null and condition.addressCity !=''"><!--城市检索 -->
+			and a.address_city = #{condition.addressCity} 
+		</if>
+		<if test="condition.addressCounty !=null and condition.addressCounty !=''"><!--县/区检索 -->
+			and a.address_county = #{condition.addressCounty} 
+		</if>
+		<if test="condition.industry !=null and condition.industry !=''"><!--行业检索 -->
+			and a.industry = #{condition.industry} 
+		</if>
+    </select>
+	
+	<!-- 运营商获取团体列表 -->
+    <select id="pagingByCondition" parameterType="com.blue.pem.api.entity.PageCondition" resultMap="GroupDOResultMap">
+        select a.id, a.name, a.account,
+        a.docking_name, a.docking_phone, a.address_prov, 
+        a.address_city, a.address_county, a.industry, a.hospital_id, a.hospital_office_id
+         from patient_group a 
+        where a.hospital_id = #{condition.hospitalId} and a.version_sign = 2 
+        <if test="condition.searchWord !=null and condition.searchWord !=''"><!--名称检索 -->
+			and a.name like concat('%', #{condition.searchWord}, '%') 
+		</if>
+		<if test="condition.addressProv !=null and condition.addressProv !=''"><!--省份检索 -->
+			and a.address_prov = #{condition.addressProv} 
+		</if>
+		<if test="condition.addressCity !=null and condition.addressCity !=''"><!--城市检索 -->
+			and a.address_city = #{condition.addressCity} 
+		</if>
+		<if test="condition.addressCounty !=null and condition.addressCounty !=''"><!--县/区检索 -->
+			and a.address_county = #{condition.addressCounty} 
+		</if>
+		<if test="condition.industry !=null and condition.industry !=''"><!--行业检索 -->
+			and a.industry = #{condition.industry} 
+		</if>
+		order by create_time desc 
+		limit #{currentResult}, #{pageSize} 
+    </select>
+    
+    <!-- 获取团体名称列表 -->
+    <select id="getNameListByCondition" parameterType="com.blue.pem.api.entity.PageCondition" resultType="String">
+        select a.name
+        from patient_group a 
+        where a.hospital_id = #{condition.hospitalId} and (a.version_sign = 1 or a.version_sign is null )
+        <if test="condition.searchWord !=null and condition.searchWord !=''"><!--名称检索 -->
+			and a.name like concat('%', #{condition.searchWord}, '%') 
+		</if>
+		<if test="condition.addressProv !=null and condition.addressProv !=''"><!--省份检索 -->
+			and a.address_prov = #{condition.addressProv} 
+		</if>
+		<if test="condition.addressCity !=null and condition.addressCity !=''"><!--城市检索 -->
+			and a.address_city = #{condition.addressCity} 
+		</if>
+		<if test="condition.addressCounty !=null and condition.addressCounty !=''"><!--县/区检索 -->
+			and a.address_county = #{condition.addressCounty} 
+		</if>
+		<if test="condition.industry !=null and condition.industry !=''"><!--行业检索 -->
+			and a.industry = #{condition.industry} 
+		</if>
+		group by a.name 
+		order by create_time desc 
+    </select>
+    
+    <!-- 获取通过团体名称获取最新的团体 -->
+    <select id="findRecentlyByName" parameterType="map" resultMap="GroupDOResultMap">
+        select a.id, a.name, a.account,
+        (select count(*) from patient_group g where g.name = #{name} and g.hospital_id = #{hospitalId}) AS batchCount,  
+        a.docking_name, a.docking_phone, a.address_prov, 
+        a.address_city, a.address_county, a.industry, a.hospital_id, a.hospital_office_id
+        from patient_group a 
+        where a.name = #{name} 
+        and a.hospital_id = #{hospitalId}
+		order by create_time desc 
+		limit 0,1
+		
+    </select>
+    
+    
+    
+    <!-- 通过id获取数据 -->
+	<select id="findGroupDOById" parameterType="java.lang.Long" resultMap="GroupDOResultMap">
+		select * from 
+			patient_group
+		where 
+			id = #{value}
+	</select>
+	
+	
+</mapper>

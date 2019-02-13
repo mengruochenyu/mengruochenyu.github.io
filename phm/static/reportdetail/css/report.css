@@ -1,0 +1,79 @@
+.main {
+    padding: 1% 0;
+    /*position: fixed;*/
+    overflow: hidden;
+    overflow-y: scroll;
+    /*top: 100px;
+    right: 0;
+    bottom: 0;
+    z-index: 99;*/
+    width: 100%;
+    background: #f6fefe;
+}
+.main::-webkit-scrollbar {
+    -webkit-appearance: none;
+    background-color: rgba(0,0,0, .15);
+    width: 8px;
+    height: 8px;
+}
+.main::-webkit-scrollbar-thumb {
+    border-radius: 0;
+    background-color: rgba(0,0,0, .4);
+}
+
+.border { border-radius: 5px; box-shadow: 0 0 16px rgba(0,0,0,0.1); background-color: #ffffff; }
+.pd2 { padding: 2%; }
+.mt20 { margin-top: 20px; }
+.mlr10 { margin-left: 10px; margin-right: 10px; }
+.text-right { text-align: right !important; }
+.rtitle, .rtitle2 { height: 60px; line-height: 60px; margin-bottom: 10px; font-size: 18px; font-weight: bolder; }
+.rtitle2 { margin-top: 30px; text-align: center; border-bottom: 1px dashed #e4e7e7; }
+.mtitle { margin-bottom: 10px; font-size: 18px; }
+/*体检报告打印模式下*/
+@media print{
+    .mtitle .icon, .js_answer, .js_answerbtn, #btnTop { display: none; }
+}
+.yinzi { display: inline-block; border: 1px solid #ddf1f1; padding: 3px 8px; margin-bottom: 10px; border-radius: 30px; background: #f6fefe; font-size: 16px; }
+.mbtn { display: inline-block; padding: 1px 8px; border-radius: 50px; color: #ffffff; line-height: 1.5; text-align: center; white-space: nowrap; vertical-align: middle; }
+.mbtn-big { padding: 4px 20px; font-size: 18px; }
+.mbtn-blue { border: 1px solid rgba(3,236,227,0.7); color: #ffffff !important;
+    background: #4da1ff;
+    background: -webkit-linear-gradient(left, #03ece3, #4da1ff); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #03ece3, #4da1ff); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #03ece3, #4da1ff); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #03ece3, #4da1ff); /* 标准的语法 */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#03ece3', endColorstr='#4da1ff');
+}
+.mbtn-blue:hover, .mbtn-blue:active, .mbtn-blue:visited { border: 1px solid rgba(3,236,227,0.7); color: #ffffff; text-decoration: none;
+    background: #4da1ff;
+    background: -webkit-linear-gradient(left, #04e1d8, #4099fd); /* Safari 5.1 - 6.0 */
+    background: -o-linear-gradient(right, #04e1d8, #4099fd); /* Opera 11.1 - 12.0 */
+    background: -moz-linear-gradient(right, #04e1d8, #4099fd); /* Firefox 3.6 - 15 */
+    background: linear-gradient(to right, #04e1d8, #4099fd); /* 标准的语法 */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#04e1d8', endColorstr='#4099fd');
+}
+.icon { display: inline-block; background: url("img/ics.png") no-repeat 0 0; }
+.icon-dian { width: 7px; height: 18px; background-position: -56px -54px; margin-right: 6px; vertical-align: middle; }
+
+/*answer*/
+.main3 { padding: 0; }
+.answer-top { display: flex; justify-items: center; padding: 1% 2% 0 2%; border-bottom: 1px solid #e4e7e7; background: #ffffff; font-size: 16px; font-weight: bolder; }
+.answer-top .mbtn { margin: 0 1% 1% 0; }
+.border-right-bottom { height: 140px; border-right: 1px solid #e4e7e7; border-bottom: 1px solid #e4e7e7; }
+.border-right-bottom .que { height: 70px; overflow: hidden; }
+.border-right-bottom .que .question { height: 60px; }
+.border-right-bottom .answer { height: 40px; }
+.tc-box { padding: 10px; border: 1px solid #e4e7e7; }
+.pd5 { padding: 5%; }
+/*paging start*/
+.pages {  position: relative; float: left; left: 50%; }
+.M-box { position: relative; float: left; left: -50%; text-align: center; zoom: 1; }
+.M-box:before, .M-box:after { content:""; display: table; }
+.M-box:after { clear: both; overflow: hidden; }
+.M-box span { float: left; margin: 0 5px; width: 38px; height: 38px; line-height: 38px; color: #bdbdbd; font-size: 14px; border-radius: 4px; }
+.M-box .active { float: left; margin: 0 5px; width: 38px; height: 38px; line-height: 38px; background: #4da1ff; color: #fff; font-size: 14px; border: 1px solid #4da1ff; }
+.M-box a { float: left; margin: 0 5px; width: 38px; height: 38px; line-height: 38px; border: 1px solid #ebebeb; background: #fff; border-radius: 4px; color: #bdbdbd; font-size: 14px; }
+.M-box a:hover { color:#fff; background: #4da1ff; }
+.M-box .next, .M-box .prev { font-family: "Simsun"; font-size: 16px; font-weight: bold; }
+.now, .count { padding: 0 5px; color: #f00; }
+/*paging end*/

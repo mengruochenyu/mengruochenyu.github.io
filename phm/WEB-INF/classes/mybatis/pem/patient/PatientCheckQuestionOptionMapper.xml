@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PatientCheckQuestionOptionMapper">
+	<resultMap type="PatientCheckQuestionOption" id="patientCheckQuestionOptionResultMap">
+		<id column="id" property="id"/>
+		<result column="patient_item_id" property="patientItemId"/>
+		<result column="package_id" property="packageId"/>
+		<result column="check_sheet_id" property="checkSheetId"/>
+		<result column="check_sheet_name" property="checkSheetName"/>
+		<result column="question_id" property="questionId"/>
+		<result column="question_description" property="questionDescription"/>
+		<result column="question_name" property="questionName"/>
+		<result column="patient_option" property="patientOption"/>
+		<result column="patient_score" property="patientScore"/>
+		<result column="time" property="time"/>
+		<result column="func_type" property="funcType"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+		<!-- 二期新增 -->
+		<result column="question_description_text" property="questionDescriptionText"/>
+		<result column="question_description_img" property="questionDescriptionImg"/>
+		<result column="patient_option_text" property="patientOptionText"/>
+		<result column="patient_option_img" property="patientOptionImg"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="PatientCheckQuestionOption" useGeneratedKeys="true" keyProperty="id">
+		insert into patient_check_question_option(
+			patient_item_id,
+			package_id,
+			check_sheet_id,
+			check_sheet_name,
+			question_id,
+			question_description,
+			question_description_text,
+			question_description_img,
+			question_name,
+			patient_option,
+			patient_option_text,
+			patient_option_img,
+			patient_score,
+			`time`,
+			`func_type`,
+			create_user_id,
+			create_time
+		) values (
+			#{patientItemId},
+			#{packageId},
+			#{checkSheetId},
+			#{checkSheetName},
+			#{questionId},
+			#{questionDescription},
+			#{questionDescriptionText},
+			#{questionDescriptionImg},
+			#{questionName},
+			#{patientOption},
+			#{patientOptionText},
+			#{patientOptionImg},
+			#{patientScore},
+			#{time},
+			#{funcType},
+			#{createUserId},
+			#{createTime}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from patient_check_question_option
+		where 
+			id = #{value}
+	</delete>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="PatientCheckQuestionOption">
+		update patient_check_question_option
+			set 
+			<if test="patientItemId != null">
+				patient_item_id = #{patientItemId},
+			</if>
+			<if test="packageId != null">
+                package_id = #{packageId},
+			</if>
+			<if test="checkSheetId != null">
+				check_sheet_id = #{checkSheetId},
+			</if>
+			<if test="checkSheetName != null and checkSheetName != ''">
+				check_sheet_name = #{checkSheetName},
+			</if>
+			<if test="questionId != null">
+				question_id = #{questionId},
+			</if>
+			<if test="questionDescription != null and questionDescription != ''">
+				question_description = #{questionDescription},
+			</if>
+			<if test="questionDescriptionText != null and questionDescriptionText != ''">
+				question_description_text = #{questionDescriptionText},
+			</if>
+			<if test="questionDescriptionImg != null and questionDescriptionImg != ''">
+				question_description_img = #{questionDescriptionImg},
+			</if>
+			<if test="questionName != null and questionName != ''">
+				question_name = #{questionName},
+			</if>
+			<if test="patientOption != null and patientOption != ''">
+				patient_option = #{patientOption},
+			</if>
+			<if test="patientOptionText != null and patientOptionText != ''">
+				patient_option_text = #{patientOptionText},
+			</if>
+			<if test="patientOptionImg != null and patientOptionImg != ''">
+				patient_option_img = #{patientOptionImg},
+			</if>
+			<if test="patientScore != null">
+				patient_score = #{patientScore},
+			</if>
+			<if test="time!= null">
+				`time` = #{time},
+			</if>
+			<if test="funcType!= null">
+				`func_type` = #{funcType},
+			</if>
+			id = id
+			where 
+				id = #{id}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="patientCheckQuestionOptionResultMap">
+		select * from 
+			patient_check_question_option
+		where 
+			id = #{value}
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="findByCondition" parameterType="PatientCheckQuestionOption" resultMap="patientCheckQuestionOptionResultMap">
+		select * from 
+			patient_check_question_option where 1=1
+			<if test="createUserId != null and createUserId != ''">
+				and create_user_id = #{createUserId}
+			</if>
+			<if test="patientItemId != null">
+				and patient_item_id = #{patientItemId}
+			</if>
+			<if test="packageId != null">
+				and package_id = #{packageId}
+			</if>
+			<if test="checkSheetId != null">
+				and check_sheet_id = #{checkSheetId}
+			</if>
+			<if test="checkSheetName != null and checkSheetName != ''">
+				and check_sheet_name = #{checkSheetName}
+			</if>
+			<if test="questionId != null">
+				and question_id = #{questionId}
+			</if>
+			<if test="questionDescription != null and questionDescription != ''">
+				and question_description = #{questionDescription}
+			</if>
+			<if test="questionName != null and questionName != ''">
+				and question_name = #{questionName}
+			</if>
+			<if test="patientOption != null and patientOption != ''">
+				and patient_option = #{patientOption}
+			</if>
+			<if test="patientScore != null">
+				and patient_score = #{patientScore}
+			</if>
+			<if test="funcType != null">
+				and func_type = #{funcType}
+			</if>
+			<if test="time != null">
+				and `time` = #{time}
+			</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="patientCheckQuestionOptionResultMap">
+		select * from 
+				patient_check_question_option a where 1=1
+		<if test="pd.query_time_start != null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end != ''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>
+		order by a.create_time desc	
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="patientCheckQuestionOptionResultMap">
+		select * from patient_check_question_option a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteBatch" parameterType="String">
+		delete from patient_check_question_option
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+
+    <!--批量保存用户选项-->
+    <insert id ="saveBatchByOptionIdAndPatientItemId" parameterType="list" >
+        INSERT INTO patient_check_question_option(
+            patient_item_id,
+            package_id,
+            check_sheet_id,
+            check_sheet_name,
+            question_id,
+            question_description,
+            question_description_text,
+			question_description_img,
+            question_name,
+            option_id,
+            patient_option,
+            patient_option_text,
+			patient_option_img,
+            patient_score,
+            `time`,
+            `func_type`,
+            create_user_id,
+            create_time
+        )
+        values
+        <foreach collection ="list" item="item" index= "index" separator =",">
+        (
+            #{item.patientItemId},
+            #{item.packageId},
+            #{item.checkSheetId},
+            (SELECT name FROM check_sheet WHERE id=#{item.checkSheetId}),
+            (SELECT question_id FROM check_question_option WHERE id=#{item.optionId}),
+            (SELECT description FROM check_question WHERE id=(SELECT question_id FROM check_question_option WHERE id=#{item.optionId})),
+            (SELECT description_text FROM check_question WHERE id=(SELECT question_id FROM check_question_option WHERE id=#{item.optionId})),
+            (SELECT description_img FROM check_question WHERE id=(SELECT question_id FROM check_question_option WHERE id=#{item.optionId})),
+            null,
+            #{item.optionId},
+            (SELECT description FROM check_question_option WHERE id=#{item.optionId}),
+            (SELECT description_img FROM check_question_option WHERE id=#{item.optionId}),
+            (SELECT description_img FROM check_question_option WHERE id=#{item.optionId}),
+            (SELECT score FROM check_question_option WHERE id=#{item.optionId}),
+            #{item.time},
+            #{item.funcType},
+            #{item.patientItemId},
+            now()
+        )
+        </foreach >
+    </insert >
+
+    <!--查找用户答题记录-->
+    <select id="findUserOptionlistPage" parameterType="page" resultType="map">
+        SELECT
+        cq.id AS questionId,
+        cq.description AS questionDescription,
+        cq.description_text AS questionDescriptionText,
+		cq.description_img AS questionDescriptionImg,
+        cq.cont_type AS q_cont_type,
+        cq.cont_type AS o_cont_type,
+        cq.func_type AS funcType
+        FROM check_sheet_question_asso csqa
+        LEFT JOIN check_question cq ON csqa.question_id=cq.id
+        WHERE 1=1 AND cq.func_type=1 
+        <if test="pd.sheetId != null">
+				and csqa.sheet_id = #{pd.sheetId}
+	    </if>
+	    <if test="pd.sheetIdList != null">
+			and csqa.sheet_id in 
+        <foreach collection ="pd.sheetIdList" item="item" index= "index" open="(" separator="," close=")">
+          ${item}
+        </foreach>
+	    </if>
+        
+        ORDER BY csqa.sheet_id, csqa.question_seq
+    </select>
+
+    <!--清除缓存的用户所有的答题记录-->
+    <delete id="clearPatientItemCheckOptions" parameterType="map">
+        DELETE FROM patient_check_question_option WHERE patient_item_id=#{patientItemId} AND check_sheet_id=#{sheetId}
+    </delete>
+
+    <!--根据题目删除用户选项-->
+    <delete id="deleteBySheetQuestionIds" parameterType="map">
+        DELETE FROM patient_check_question_option
+        WHERE patient_item_id=#{patientItemId} AND check_sheet_id=#{sheetId}
+        AND question_id IN
+        <foreach item="item" index="index" collection="questionIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+    
+    <!-- 找出用户所有的题目id -->
+	<select id="getQuestionIdList" parameterType="map" resultType="java.lang.Long">
+		select a.option_id from patient_check_question_option a 
+		WHERE a.patient_item_id=#{patientItemId} AND a.package_id = #{packageId}
+	</select>
+
+    <!-- 查询用户已答题数量 -->
+	<select id="getPatientQuestionCount" parameterType="Long" resultType="Integer">
+		select count(*) from patient_check_question_option a 
+		where a.patient_item_id = #{patientItemId}
+	</select>
+</mapper>

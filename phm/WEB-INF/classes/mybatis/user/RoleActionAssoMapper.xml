@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RoleActionAssoMapper">
+	<resultMap type="RoleActionAsso" id="roleActionAssoResultMap">
+		<id column="role_action_asso_id" property="roleActionAssoId"/>
+		<result column="role_id" property="roleId"/>
+		<result column="menu_action_id" property="menuActionId"/>
+		<result column="del_flag" property="delFlag"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+	</resultMap>
+	
+	<resultMap type="RoleActionAssoVO" id="roleActionAssoVOResultMap">
+		<id column="role_action_asso_id" property="roleActionAssoId"/>
+		<result column="role_id" property="roleId"/>
+		<result column="menu_id" property="menuId"/>
+		<result column="menu_action_code" property="menuActionCode"/>
+		<result column="menu_action_id" property="menuActionId"/>
+		<result column="del_flag" property="delFlag"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="RoleActionAsso" useGeneratedKeys="true" keyProperty="roleActionAssoId">
+		insert into sys_role_action_asso(
+			role_id,
+			menu_action_id,
+			create_user_id,
+			create_time,
+			update_user_id, 
+			update_time
+		) values (
+			#{roleId},
+			#{menuActionId},
+			#{createUserId},
+			#{createTime},
+			#{updateUserId},
+			#{updateTime}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from sys_role_action_asso
+		where 
+			role_action_asso_id = #{value}
+	</delete>
+
+	
+	<!-- 删除-->
+	<update id="deleteLogical" parameterType="java.lang.Long">
+		update sys_role_action_asso set del_flag=1
+		where role_action_asso_id = #{value}
+	</update>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="RoleActionAsso">
+		update sys_role_action_asso
+			set 
+			<if test="roleId!=null">
+				role_id = #{roleId},
+			</if>
+			<if test="menuActionId!=null">
+				menu_action_id = #{menuActionId},
+			</if>
+			<if test="updateUserId!=null and updateUserId!=''">
+				update_user_id = #{updateUserId},
+			</if>
+			<if test="updateTime!=null and updateTime!=''">
+				update_time = #{updateTime},
+			</if>
+			role_action_asso_id = role_action_asso_id
+			where 
+				role_action_asso_id = #{roleActionAssoId}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="roleActionAssoResultMap">
+		select * from 
+			sys_role_action_asso
+		where 
+			role_action_asso_id = #{value}
+	</select>
+	
+	<!-- 通过roleId获取数据 -->
+	<select id="findByCondition" parameterType="java.util.Map" resultMap="roleActionAssoResultMap">
+		select * from 
+			sys_role_action_asso 
+			where del_flag=0 
+		<if test="roleId!=null">
+			and role_id = #{roleId}
+		</if>
+		<if test="menuActionId!=null">
+			and menu_action_id = #{menuActionId}
+		</if>
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="roleActionAssoResultMap">
+		select * from 
+				sys_role_action_asso a where del_flag=0 
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.name like concat('%',#{pd.query_key},'%')
+		</if>
+		order by a.create_time desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="roleActionAssoResultMap">
+		select * from sys_role_action_asso a
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="findByRoleIdWithMenu" parameterType="java.lang.Long" resultMap="roleActionAssoVOResultMap">
+		select a.*, b.menu_id, b.menu_action_code from sys_role_action_asso a, sys_menu_action b 
+		where a.menu_action_id=b.menu_action_id and a.role_id=#{value} and a.del_flag=0 order by b.menu_id
+	</select>
+	
+	<!-- 批量删除 -->
+	<update id="deleteLogicalBatch" parameterType="String">
+		update sys_role_action_asso set del_flag=1  
+		where 
+			role_action_asso_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteByRoleId" parameterType="java.lang.Long">
+		delete from sys_role_action_asso where role_id=#{value}
+	</delete>
+	
+	<!-- 批量插入 -->
+     <insert id ="saveBatch" parameterType="list" >
+           insert into sys_role_action_asso
+           (role_id, menu_action_id, create_user_id, create_time, update_user_id, update_time)
+           values	
+            <foreach collection="list" item="asso" index="index" separator=",">
+                (
+                #{asso.roleId}, #{asso.menuActionId},#{asso.createUserId},
+                #{asso.createTime},#{asso.updateUserId},#{asso.updateTime}
+                )
+            </foreach >
+     </insert >
+	
+</mapper>

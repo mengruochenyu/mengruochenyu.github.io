@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MemberMapper">
+	<resultMap type="Member" id="memberResultMap">
+		<id column="id" property="id"/>
+		<result column="registration_id" property="registrationId"/>
+		<result column="status" property="status"/>
+		<result column="number" property="number"/>
+		<result column="name" property="name"/>
+		<result column="mobile" property="mobile"/>
+		<result column="photo_url" property="photoUrl"/>
+		<result column="gender" property="gender"/>
+		<result column="address_prov" property="addressProv"/>
+		<result column="address_city" property="addressCity"/>
+		<result column="address_county" property="addressCounty"/>
+		<result column="address_detail" property="addressDetail"/>
+		<result column="birthday" property="birthday"/>
+		<result column="degree" property="degree"/>
+		<result column="career" property="career"/>
+		<result column="marital_status" property="maritalStatus"/>
+		<result column="del_flag" property="delFlag"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+		<result column="has_agreement" property="hasAgreement"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="Member" useGeneratedKeys="true" 
+		keyProperty="id">
+		insert into p_member(
+		    registration_id,
+		    status,
+			number,
+			name,
+			mobile,
+			photo_url,
+			gender,
+			address_prov,
+			address_city,
+			address_county,
+			address_detail,
+			birthday,
+			degree,
+			career,
+			marital_status,
+			create_user_id,
+			create_time,
+			has_agreement
+		) values (
+		    #{registrationId},
+		    #{status},
+			#{number},
+			#{name},
+			#{mobile},
+			#{photoUrl},
+			#{gender},
+			#{addressProv},
+			#{addressCity},
+			#{addressCounty},
+			#{addressDetail},
+			#{birthday},
+			#{degree},
+			#{career},
+			#{maritalStatus},
+			#{createUserId},
+			#{createTime},
+			#{hasAgreement}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from p_member
+		where
+				id = #{value}
+	</delete>
+	
+	<!-- 软删除-->
+	<update id="deleteLogical" parameterType="java.lang.Long">
+		update p_member set del_flag=1
+		where id = #{value}
+	</update>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="Member">
+		update p_member
+			set 
+			<if test="registrationId!=null">
+				`registration_id` = #{registrationId},
+			</if>
+			<if test="status!=null">
+				`status` = #{status},
+			</if>
+			<if test="number!=null and number!=''">
+				`number` = #{number},
+			</if>
+			
+			<if test="name!=null and name!=''">
+				`name` = #{name},
+			</if>
+			
+			<if test="mobile!=null and mobile!=''">
+				`mobile` = #{mobile},
+			</if>
+			
+			<if test="photoUrl!=null and photoUrl!=''">
+				`photo_url` = #{photoUrl},
+			</if>
+			
+			<if test="gender!=null">
+				`gender` = #{gender},
+			</if>
+			<if test="addressProv!=null and addressProv!=''">
+				`address_prov` = #{addressProv},
+			</if>
+			
+			<if test="addressCity!=null and addressCity!=''">
+				`address_city` = #{addressCity},
+			</if>
+			
+			<if test="addressCounty!=null and addressCounty!=''">
+				`address_county` = #{addressCounty},
+			</if>
+			
+			<if test="addressDetail!=null and addressDetail!=''">
+				`address_detail` = #{addressDetail},
+			</if>
+			
+			<if test="birthday!=null">
+				`birthday` = #{birthday},
+			</if>
+			<if test="degree!=null and degree!=''">
+				`degree` = #{degree},
+			</if>
+			
+			<if test="career!=null and career!=''">
+				`career` = #{career},
+			</if>
+			
+			<if test="maritalStatus!=null">
+				`marital_status` = #{maritalStatus},
+			</if>
+		<if test="updateUserId!=null and updateUserId!=''">
+			update_user_id = #{updateUserId},
+		</if>
+		<if test="updateTime!=null">
+			update_time = #{updateTime},
+		</if>
+		<if test="hasAgreement!=null">
+			has_agreement = #{hasAgreement},
+		</if>
+			id = id
+			where
+				id = #{id}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="memberResultMap">
+		select * from 
+			p_member
+		where 
+			id = #{value}
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="findByCondition" parameterType="Member" resultMap="memberResultMap">
+		select * from 
+			p_member where del_flag=0
+			<if test="registrationId!=null">
+				and `registration_id` = #{registrationId} 
+			</if>
+			<if test="status!=null and status!=''">
+				and status = #{status} 
+			</if>
+			<if test="number!=null and number!=''">
+				and `number` like concat('%',#{number},'%')
+			</if>
+			<if test="name!=null and name!=''">
+				and `name` like concat('%',#{name},'%')
+			</if>
+			<if test="mobile!=null and mobile!=''">
+				and `mobile` = #{mobile}
+			</if>
+			<if test="photoUrl!=null and photoUrl!=''">
+				and `photo_url` = #{photoUrl}
+			</if>
+			<if test="gender!=null">
+				and `gender` = #{gender}
+			</if>
+			<if test="addressProv!=null and addressProv!=''">
+				and `address_prov` = #{addressProv}
+			</if>
+			<if test="addressCity!=null and addressCity!=''">
+				and `address_city` = #{addressCity}
+			</if>
+			<if test="addressCounty!=null and addressCounty!=''">
+				and `address_county` = #{addressCounty}
+			</if>
+			<if test="addressDetail!=null and addressDetail!=''">
+				and `address_detail` like concat('%',#{addressDetail},'%')
+			</if>
+			<if test="birthday!=null">
+				`birthday` = #{birthday},
+			</if>
+			<if test="degree!=null and degree!=''">
+				and `degree` = #{degree}
+			</if>
+			<if test="career!=null and career!=''">
+				and `career` = #{career}
+			</if>
+			<if test="maritalStatus!=null">
+				and `marital_status` = #{maritalStatus}
+			</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="memberResultMap">
+		select * from 
+				p_member a where del_flag=0
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.name like concat('%',#{pd.query_key},'%')
+		</if>
+		<if test="pd.query_key_gender!=null and pd.query_key_gender!=''">
+			and a.gender like concat('%',#{pd.query_key_gender},'%')
+		</if>
+		<if test="pd.query_key_degree!=null and pd.query_key_degree!=''">
+			and a.degree like concat('%',#{pd.query_key_degree},'%')
+		</if>
+		<if test="pd.query_key_career!=null and pd.query_key_career!=''">
+			and a.career like concat('%',#{pd.query_key_career},'%')
+		</if>
+		<if test="pd.query_key_maritalStatus!=null and pd.query_key_maritalStatus!=''">
+			and a.marital_status like concat('%',#{pd.query_key_maritalStatus},'%')
+		</if>
+		<if test="pd.query_key_number !=null and pd.query_key_number!=''">
+			and a.number like concat('%',#{pd.query_key_number},'%')
+		</if>
+		<if test="pd.query_key_name !=null and pd.query_key_name!=''">
+			and a.name like concat('%',#{pd.query_key_name},'%')
+		</if>
+		<if test="pd.query_key_mobile !=null and pd.query_key_mobile!=''">
+			and a.mobile like concat('%',#{pd.query_key_mobile},'%')
+		</if>
+		<if test="pd.query_key_addressDetail !=null and pd.query_key_addressDetail!=''">
+			and a.address_detail like concat('%',#{pd.query_key_addressDetail},'%')
+		</if>
+		<if test="pd.query_key_addressProv !=null and pd.query_key_addressProv !=''">
+			and a.address_prov like concat('%',#{pd.query_key_addressProv},'%')
+		</if>
+		<if test="pd.query_key_addressCity !=null and pd.query_key_addressCity !=''">
+			and a.address_city like concat('%',#{pd.query_key_addressCity},'%')
+		</if>
+		<if test="pd.query_key_addressCounty !=null and pd.query_key_addressCounty !=''">
+			and a.address_county like concat('%',#{pd.query_key_addressCounty},'%')
+		</if>
+		<if test="pd.query_key_doctor_id !=null and pd.query_key_doctor_id !=''">
+			and a.id in(select member_id from p_doctor_member_asso where doctor_id like concat('%',#{pd.query_key_doctor_id},'%') )
+		</if>
+			order by number desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="memberResultMap">
+		select * from p_member a
+	</select>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteBatch" parameterType="String">
+		delete from p_member
+		where id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<!-- 批量删除 -->
+	<update id="deleteLogicalBatch" parameterType="String">
+		update p_member set del_flag=1  
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	<!-- 获取医生的病人数量 -->
+	<select id="getCountByCondition" parameterType="map" resultType="Integer">
+		select count(*) from p_member a 
+		left join p_doctor_member_asso b on a.id = b.member_id 
+		where b.doctor_id = #{doctorId}
+	</select>
+	
+	<!-- 获取医生的病人列表 -->
+	<select id="pagingByDoctorId" parameterType="com.blue.pem.api.entity.PageCondition" resultType="com.blue.common.util.PageData">
+		select a.id, a.name, a.photo_url photoUrl from p_member a 
+		left join p_doctor_member_asso b on a.id = b.member_id 
+		where b.doctor_id = #{condition.doctorId} 
+		limit #{currentResult}, #{pageSize}
+	</select>
+	
+	
+	
+</mapper>

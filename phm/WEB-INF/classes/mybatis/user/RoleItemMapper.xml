@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="RoleItemMapper">
+	<resultMap type="RoleItem" id="roleItemResultMap">
+		<id column="role_id" property="roleItemId"/>
+		<result column="role_name" property="roleName"/>
+		<result column="role_level" property="roleLevel"/>
+		<result column="fil_qx" property="filQx"/>
+		<result column="is_pub" property="isPub"/>
+		<result column="reg_flg" property="regFlg"/>
+		<result column="desc" property="desc"/>
+		<result column="status" property="status"/>
+		<result column="del_flag" property="delFlag"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="RoleItem" useGeneratedKeys="true" keyProperty="roleItemId">
+		insert into t_role(
+			role_name,
+			role_level,
+			fil_qx,
+			is_pub,
+			reg_flg,
+			`desc`,
+			status,
+			create_user_id,
+			create_time,
+			update_user_id,
+			update_time
+		) values (
+			#{roleName},
+			#{roleLevel},
+			#{filQx},
+			#{isPub},
+			#{regFlg},
+			#{desc},
+			#{status},
+			#{createUserId},
+			#{createTime},
+			#{updateUserId},
+			#{updateTime}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from t_role
+		where 
+			role_id = #{value}
+	</delete>
+
+	
+	<!-- 删除-->
+	<update id="deleteLogical" parameterType="java.lang.Long">
+		update t_role set del_flag=1
+		where role_id = #{value}
+	</update>
+	
+	
+	<!-- 修改 -->
+	<update id="update" parameterType="RoleItem">
+		update t_role
+			set 
+			<if test="roleName!=null and roleName!=''">
+				role_name = #{roleName},
+			</if>
+			<if test="roleLevel!=null">
+				role_level = #{roleLevel},
+			</if>
+			<if test="filQx!=null and filQx!=''">
+				fil_qx = #{filQx},
+			</if>
+			<if test="isPub!=null">
+				is_pub = #{isPub},
+			</if>
+			<if test="regFlg!=null and regFlg!=''">
+				reg_flg = #{regFlg},
+			</if>
+			<if test="desc!=null">
+				`desc` = #{desc},
+			</if>
+			<if test="status!=null">
+				status = #{status},
+			</if>
+			<if test="updateUserId!=null and updateUserId!=''">
+				update_user_id = #{updateUserId},
+			</if>
+			<if test="updateTime!=null and updateTime!=''">
+				update_time = #{updateTime},
+			</if>
+			role_id = role_id
+			where 
+				role_id = #{roleItemId}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="roleItemResultMap">
+		select * from 
+			t_role
+		where 
+			role_id = #{value}
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="roleItemResultMap">
+		select * from 
+				t_role a where del_flag=0 
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.role_name like concat('%',#{pd.query_key},'%')
+		</if>
+		<if test="pd.roleLevel!=null and pd.roleLevel!=''"><!-- 关键字检索 -->
+			and a.role_level=#{pd.roleLevel}
+		</if>
+		order by a.create_time
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="roleItemResultMap">
+		select * from t_role a
+	</select>
+	
+	<!-- 批量删除 -->
+	<update id="deleteLogicalBatch" parameterType="String">
+		update t_role set del_flag=1  
+		where 
+			role_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	<!-- 角色等级列表 -->
+	<select id="roleLevelList" parameterType="String" resultMap="roleItemResultMap">
+		select a.* from t_role a where a.role_level=2
+	</select>
+	<!-- 企业用户申请时类型列表 -->
+	<select id="typeList" resultMap="roleItemResultMap">
+		SELECT * FROM t_role where del_flag=0 and reg_flg=1
+	</select>
+</mapper>

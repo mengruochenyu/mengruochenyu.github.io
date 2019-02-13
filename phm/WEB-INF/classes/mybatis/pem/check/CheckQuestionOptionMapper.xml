@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CheckQuestionOptionMapper">
+    <resultMap type="CheckQuestionOption" id="checkQuestionOptionResultMap">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="question_id" property="questionId"/>
+        <result column="description" property="description"/>
+        <result column="score" property="score"/>
+        <result column="create_user_id" property="createUserId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_user_id" property="updateUserId"/>
+        <result column="update_time" property="updateTime"/>
+        <result column="seq" property="seq"/>
+        <result column="cont_type" property="contType"/>
+        <result column="description_text" property="descriptionText"/>
+		<result column="description_img" property="descriptionImg"/>
+    </resultMap>
+
+    <!--用户端体检返回字段-->
+    <resultMap id="optionDTOMap" type="OptionDTO">
+        <result column="id" property="optionId"/>
+        <result column="question_id" property="questionId"/>
+        <result column="score" property="score"/>
+        <result column="description" property="description"/>
+        <result column="description_text" property="descriptionText"/>
+		<result column="description_img" property="descriptionImg"/>
+        <result column="cont_type" property="contType"/>
+        <result column="selected" property="selected"/>
+    </resultMap>
+
+    <!-- 新增-->
+    <insert id="save" parameterType="CheckQuestionOption" useGeneratedKeys="true" keyProperty="id">
+        insert into check_question_option(
+        name,
+        question_id,
+        description,
+        description_text,
+        description_img,
+        cont_type,
+        score,
+        seq,
+        create_user_id,
+        create_time
+        ) values (
+        #{name},
+        #{questionId},
+        #{description},
+        #{descriptionText},
+        #{descriptionImg},
+        #{contType},
+        #{score},
+        #{seq},
+        #{createUserId},
+        #{createTime}
+        )
+    </insert>
+
+    <!-- 删除-->
+    <delete id="delete" parameterType="java.lang.Long">
+        delete from check_question_option
+        where
+        id = #{value}
+    </delete>
+
+    <!-- 修改 -->
+    <update id="update" parameterType="CheckQuestionOption">
+        update check_question_option
+        set
+        <if test="name!=null and name!=''">
+            name = #{name},
+        </if>
+        <if test="questionId!=null">
+            question_id = #{questionId},
+        </if>
+        <if test="description!=null and description!=''">
+            description = #{description},
+        </if>
+        <if test="contType !=null and contType !=''">
+            cont_type = #{contType},
+        </if>
+        <if test="score!=null">
+            score = #{score},
+        </if>
+        <if test="seq !=null">
+            seq = #{seq},
+        </if>
+        <if test="descriptionText !=null and descriptionText !=''">
+            description_text = #{descriptionText},
+        </if>
+        <if test="descriptionImg !=null and descriptionImg !=''">
+            description_img = #{descriptionImg},
+        </if>
+        id = id
+        where
+        id = #{id}
+    </update>
+
+
+    <!-- 通过id获取数据 -->
+    <select id="findById" parameterType="java.lang.Long" resultMap="checkQuestionOptionResultMap">
+        select * from
+        check_question_option
+        where
+        id = #{value}
+    </select>
+
+    <!-- 条件查询 -->
+    <select id="findByCondition" parameterType="CheckQuestionOption" resultMap="checkQuestionOptionResultMap">
+        select * from
+        check_question_option where 1=1
+        <if test="createUserId!=null and createUserId!=''">
+            and create_user_id = #{createUserId}
+        </if>
+        <if test="name!=null and name!=''">
+            and name = #{name}
+        </if>
+        <if test="questionId!=null">
+            and question_id = #{questionId}
+        </if>
+        <if test="description!=null and description!=''">
+            and description = #{description}
+        </if>
+        <if test="score!=null">
+            and score = #{score}
+        </if>
+        <if test="seq !=null">
+            and seq = #{seq}
+        </if>
+        <if test="descriptionText!=null and descriptionText!=''">
+            and description_text = #{descriptionText}
+        </if>
+        <if test="descriptionImg!=null and descriptionImg!=''">
+            and description_img = #{descriptionImg}
+        </if>
+        order by seq asc
+    </select>
+
+    <!-- 列表 -->
+    <select id="datalistPage" parameterType="page" resultMap="checkQuestionOptionResultMap">
+        select * from
+        check_question_option a where 1=1
+        <if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+            and a.create_time &gt;= #{pd.query_time_start}
+        </if>
+        <if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+            and a.create_time &lt;= #{pd.query_time_end}
+        </if>
+        <if test="pd.name!=null and pd.name!=''"><!-- 关键字检索 -->
+            and a.name like concat('%',#{pd.name},'%')
+        </if>
+        order by a.create_time desc
+    </select>
+
+    <!-- 列表(全部) -->
+    <select id="listAll" parameterType="String" resultMap="checkQuestionOptionResultMap">
+        select * from check_question_option a
+    </select>
+
+    <!-- 批量删除 -->
+    <delete id="deleteBatch" parameterType="String">
+        delete from check_question_option
+        where
+        id in
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--查询多个题目的选项-->
+    <select id="findByQuestionIds" parameterType="list" resultMap="checkQuestionOptionResultMap">
+        SELECT * FROM check_question_option WHERE question_id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!--查找题目的选项（包含用户做题信息）-->
+    <select id="findByPatientQuestionIds" parameterType="map" resultMap="optionDTOMap">
+        SELECT id,question_id,description,description_img,description_text,score ,cont_type,
+        id IN (SELECT option_id FROM patient_check_question_option 
+               WHERE patient_item_id=#{patientItemId} 
+               AND package_id=#{packageId}
+               ) AS selected
+        FROM check_question_option
+        WHERE question_id IN
+        <foreach item="item" index="index" collection="questionIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ORDER BY seq
+    </select>
+    <!--查找题目的选项（包含用户做题信息）-->
+    <select id="findByItemOptionIds" parameterType="map" resultMap="optionDTOMap">
+        SELECT id,question_id,description,description_img,description_text,score ,cont_type,
+        
+        <if test="itemOptionIdList!=null and itemOptionIdList.size>0">
+           id IN 
+           <foreach item="item" index="index" collection="itemOptionIdList" open="(" separator="," close=")">
+            #{item}
+           </foreach>
+        </if>
+        
+        <if test="itemOptionIdList == null or itemOptionIdList.size==0">
+           0 
+        </if>
+               AS selected
+        FROM check_question_option a 
+       <!--  LEFT JOIN patient_check_question_option b ON a -->
+        WHERE question_id IN
+        <foreach item="item" index="index" collection="questionIds" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ORDER BY seq
+    </select>
+
+    <!--计算总分-->
+    <select id="sumScoreByOptions" parameterType="list" resultType="double">
+        SELECT sum(IFNULL(score,0)) FROM check_question_option
+        WHERE id IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!--查找所有选项-->
+    <select id="findByOptionIds" parameterType="Long" resultMap="checkQuestionOptionResultMap">
+        SELECT a.* FROM check_question_option a
+        LEFT JOIN check_sheet_question_asso b ON a.question_id=b.question_id
+        WHERE a.id IN
+        <foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        ORDER BY b.question_seq
+    </select>
+</mapper>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="PatientItemExpandMapper">
+	<resultMap type="PatientItemExpand" id="patientItemExpandResultMap">
+		<id column="id" property="id"/>
+		<result column="patient_id" property="patientId"/>
+		<result column="fieldKey" property="fieldKey"/>
+		<result column="fieldValue" property="fieldValue"/>
+        <result column="create_user_id" property="createUserId"/>
+        <result column="create_time" property="createTime"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="PatientItemExpand" useGeneratedKeys="true" keyProperty="id">
+		insert into patient_item_expand(
+        patient_id,
+        fieldKey,
+        fieldValue,
+        create_user_id,
+        create_time
+		) values (
+            #{patientId},
+            #{fieldKey},
+            #{fieldValue},
+        #{createUserId},
+        #{createTime}
+		)
+	</insert>
+
+    <!--批量新增-->
+    <insert id="batchSave" parameterType="list">
+        insert into patient_item_expand(
+            patient_id,
+            fieldKey,
+            fieldValue,
+            create_user_id,
+            create_time
+        )
+        values
+        <foreach collection ="list" item="item" index= "index" separator =",">
+        (
+            #{item.patient_id},
+            #{item.fieldKey},
+            #{item.fieldValue},
+            #{item.createUserId},
+            #{item.createTime}
+        )
+        </foreach>
+    </insert>
+
+	<!-- 删除-->
+	<update id="delete" parameterType="java.lang.Long">
+		delete from patient_item_expand
+		where 
+			id = #{value}
+	</update>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="PatientItemExpand">
+		update patient_item_expand
+			set 
+			<if test="patientId!=null">
+				patient_id = #{patientId},
+			</if>
+			<if test="fieldKey!=null and fieldKey!=''">
+				fieldKey = #{fieldKey},
+			</if>
+			<if test="fieldValue!=null and fieldValue!=''">
+				fieldValue = #{fieldValue},
+			</if>
+			id = id
+			where 
+				id = #{id}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="patientItemExpandResultMap">
+		select * from 
+			patient_item_expand
+		where 
+			id = #{value}
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="findByCondition" parameterType="PatientItemExpand" resultMap="patientItemExpandResultMap">
+		select * from 
+			patient_item_expand where 1=1
+			<if test="createUserId!=null and createUserId!=''">
+				and create_user_id = #{createUserId}
+			</if>
+			<if test="patientId!=null">
+				and patient_id = #{patientId}
+			</if>
+			<if test="fieldKey!=null and fieldKey!=''">
+				and fieldKey = #{fieldKey}
+			</if>
+			<if test="fieldValue!=null and fieldValue!=''">
+				and fieldValue = #{fieldValue}
+			</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="patientItemExpandResultMap">
+		select * from 
+				patient_item_expand a where 1=1
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.name like concat('%',#{pd.query_key},'%')
+		</if>
+			order by a.create_time desc	
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="patientItemExpandResultMap">
+		select * from patient_item_expand a
+	</select>
+	
+	<!-- 批量删除 -->
+	<update id="deleteBatch" parameterType="String">
+		delete from patient_item_expand
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+</mapper>

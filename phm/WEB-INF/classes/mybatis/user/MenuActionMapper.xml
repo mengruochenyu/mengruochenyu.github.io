@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="MenuActionMapper">
+	<resultMap type="MenuAction" id="menuActionResultMap">
+		<id column="menu_action_id" property="menuActionId"/>
+		<result column="menu_action_code" property="menuActionCode"/>
+		<result column="menu_action_name" property="menuActionName"/>
+		<result column="menu_action_order" property="menuActionOrder"/>
+		<result column="menu_id" property="menuId"/>
+		<result column="del_flag" property="delFlag"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+	</resultMap>
+	
+	<resultMap type="MenuActionVO" id="menuActionVOResultMap">
+		<id column="menu_action_id" property="menuActionId"/>
+		<result column="menu_name" property="menuName"/>
+		<result column="menu_action_code" property="menuActionCode"/>
+		<result column="menu_action_name" property="menuActionName"/>
+		<result column="menu_action_order" property="menuActionOrder"/>
+		<result column="menu_id" property="menuId"/>
+		<result column="del_flag" property="delFlag"/>
+		<result column="create_user_id" property="createUserId"/>
+		<result column="create_time" property="createTime"/>
+		<result column="update_user_id" property="updateUserId"/>
+		<result column="update_time" property="updateTime"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="MenuAction" useGeneratedKeys="true" keyProperty="menuActionId">
+		insert into sys_menu_action(
+			menu_action_code,
+			menu_action_name,
+			menu_action_order,
+			menu_id,
+			create_user_id,
+			create_time
+		) values (
+			#{menuActionCode},
+			#{menuActionName},
+			#{menuActionOrder},
+			#{menuId},
+			#{createUserId},
+			#{createTime}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="java.lang.Long">
+		delete from sys_menu_action
+		where 
+			menu_action_id = #{value}
+	</delete>
+
+	
+	<!-- 删除-->
+	<update id="deleteLogical" parameterType="java.lang.Long">
+		update sys_menu_action set del_flag=1
+		where menu_action_id = #{value}
+	</update>
+	
+	
+	<!-- 修改 -->
+	<update id="edit" parameterType="MenuAction">
+		update sys_menu_action
+			set 
+			<if test="menuActionCode!=null and menuActionCode!=''">
+				menu_action_code = #{menuActionCode},
+			</if>
+			<if test="menuActionName!=null and menuActionName!=''">
+				menu_action_name = #{menuActionName},
+			</if>
+			<if test="menuActionOrder!=null">
+				menu_action_order = #{menuActionOrder},
+			</if>
+			<if test="menuId!=null">
+				menu_id = #{menuId},
+			</if>
+			<if test="updateUserId!=null and updateUserId!=''">
+				update_user_id = #{updateUserId},
+			</if>
+			<if test="updateTime!=null and updateTime!=''">
+				update_time = #{updateTime},
+			</if>
+			menu_action_id = menu_action_id
+			where 
+				menu_action_id = #{menuActionId}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="menuActionResultMap">
+		select * from 
+			sys_menu_action
+		where 
+			menu_action_id = #{value}
+	</select>
+	
+	<!-- 修改 -->
+	<select id="findByCondition" parameterType="MenuAction" resultMap="menuActionResultMap">
+		select * from 
+			sys_menu_action where 1=1
+			<if test="menuActionCode!=null and menuActionCode!=''">
+				and menu_action_code = #{menuActionCode}
+			</if>
+			<if test="menuId!=null">
+				and menu_id = #{menuId}
+			</if>
+	</select>
+	
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="menuActionResultMap">
+		select * from 
+				sys_menu_action a where del_flag=0 
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.menu_action_name like concat('%',#{pd.query_key},'%')
+		</if>
+		order by a.menu_id desc
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="menuActionResultMap">
+		select * from sys_menu_action a
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="findAllWithMenu" parameterType="String" resultMap="menuActionVOResultMap">
+		select ma.*, m.menu_name from sys_menu_action ma, sys_menu m where ma.menu_id=m.menu_id 
+			and ma.del_flag=0 order by ma.menu_id, ma.menu_action_order
+	</select>
+	
+	<!-- 批量删除 -->
+	<update id="deleteLogicalBatch" parameterType="String">
+		update sys_menu_action set del_flag=1  
+		where 
+			menu_action_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteBatch" parameterType="String">
+		delete from sys_menu_action
+		where 
+			menu_action_id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</delete>
+	
+	<insert id ="saveBatch" parameterType="list" >
+           insert into sys_menu_action
+           (menu_action_code, menu_action_name, menu_action_order, menu_id, create_user_id, create_time)
+           values	
+            <foreach collection="list" item="entity" index="index" separator=",">
+                (
+                #{entity.menuActionCode}, #{entity.menuActionName}, #{entity.menuActionOrder},
+                #{entity.menuId},#{entity.createUserId}, #{entity.createTime}
+                )
+            </foreach >
+     </insert >
+	
+</mapper>

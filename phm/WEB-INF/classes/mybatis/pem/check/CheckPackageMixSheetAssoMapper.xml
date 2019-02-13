@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="CheckPackageMixSheetAssoMapper">
+	<resultMap type="CheckPackageMixSheetAsso" id="checkPackageMixSheetAssoResultMap">
+		<id column="id" property="id"/>
+		<result column="package_mix_id" property="packageMixId"/>
+		<result column="sheet_id" property="sheetId"/>
+		<result column="sort_index" property="sortIndex"/>
+        <result column="create_user_id" property="createUserId"/>
+        <result column="create_time" property="createTime"/>
+	</resultMap>
+	
+	<!-- 新增-->
+	<insert id="save" parameterType="CheckPackageMixSheetAsso" useGeneratedKeys="true" keyProperty="id">
+		insert into check_package_mix_sheet_asso(
+        package_mix_id,
+        sheet_id,
+        sort_index,
+        create_user_id,
+        create_time
+		) values (
+            #{packageMixId},
+            #{sheetId},
+            #{sortIndex},
+        #{createUserId},
+        #{createTime}
+		)
+	</insert>
+
+    <!--批量新增-->
+    <insert id="batchSave" parameterType="list">
+        insert into check_package_mix_sheet_asso(
+            package_mix_id,
+            sheet_id,
+            sort_index,
+            create_user_id,
+            create_time
+        )
+        values
+        <foreach collection ="list" item="item" index= "index" separator =",">
+        (
+            #{item.packageMixId},
+            #{item.sheetId},
+            #{item.sortIndex},
+            #{item.createUserId},
+            #{item.createTime}
+        )
+        </foreach>
+    </insert>
+
+	<!-- 删除-->
+	<update id="delete" parameterType="java.lang.Long">
+		delete from check_package_mix_sheet_asso
+		where 
+			id = #{value}
+	</update>
+
+	<!-- 修改 -->
+	<update id="update" parameterType="CheckPackageMixSheetAsso">
+		update check_package_mix_sheet_asso
+			set 
+			<if test="packageMixId!=null">
+				package_mix_id = #{packageMixId},
+			</if>
+			<if test="sheetId!=null">
+				sheet_id = #{sheetId},
+			</if>
+			<if test="sortIndex!=null">
+				sort_index = #{sortIndex},
+			</if>
+			id = id
+			where 
+				id = #{id}
+	</update>
+	
+	
+	<!-- 通过id获取数据 -->
+	<select id="findById" parameterType="java.lang.Long" resultMap="checkPackageMixSheetAssoResultMap">
+		select * from 
+			check_package_mix_sheet_asso
+		where 
+			id = #{value}
+	</select>
+	
+	<!-- 条件查询 -->
+	<select id="findByCondition" parameterType="CheckPackageMixSheetAsso" resultMap="checkPackageMixSheetAssoResultMap">
+		select * from 
+			check_package_mix_sheet_asso where 1=1
+			<if test="createUserId!=null and createUserId!=''">
+				and create_user_id = #{createUserId}
+			</if>
+			<if test="packageMixId!=null">
+				and package_mix_id = #{packageMixId}
+			</if>
+			<if test="sheetId!=null">
+				and sheet_id = #{sheetId}
+			</if>
+			<if test="sortIndex!=null">
+				and sort_index = #{sortIndex}
+			</if>
+	</select>
+	
+	<!-- 列表 -->
+	<select id="datalistPage" parameterType="page" resultMap="checkPackageMixSheetAssoResultMap">
+		select * from 
+				check_package_mix_sheet_asso a where 1=1
+		<if test="pd.query_time_start!=null and pd.query_time_start!=''"><!-- 时间检索 -->
+			and a.create_time &gt;= #{pd.query_time_start}
+		</if>
+		<if test="pd.query_time_end!=null and pd.query_time_end!=''"><!-- 时间检索 -->
+			and a.create_time &lt;= #{pd.query_time_end}
+		</if>	
+		<if test="pd.query_key!=null and pd.query_key!=''"><!-- 关键字检索 -->
+			and a.name like concat('%',#{pd.query_key},'%')
+		</if>
+			order by a.create_time desc	
+	</select>
+	
+	<!-- 列表(全部) -->
+	<select id="listAll" parameterType="String" resultMap="checkPackageMixSheetAssoResultMap">
+		select * from check_package_mix_sheet_asso a
+	</select>
+	
+	<!-- 批量删除 -->
+	<update id="deleteBatch" parameterType="String">
+		delete from check_package_mix_sheet_asso
+		where 
+			id in
+		<foreach item="item" index="index" collection="array" open="(" separator="," close=")">
+                 #{item}
+		</foreach>
+	</update>
+	
+	<!-- 获取混合套餐的套餐之外的量表 -->
+	<select id="getSheetList" parameterType="java.lang.Long" resultType="CheckSheet">
+		select s.id, s.name, s.description from check_package_mix_sheet_asso a 
+		left join check_sheet s on a.sheet_id = s.id 
+		where a.package_mix_id = #{packageId} 
+		and s.id not in (
+		     select cs.id from check_package_mix_package_asso pp 
+		     left join check_package_sheet_asso ps on pp.package_id = ps.package_id  
+		     left join check_sheet cs on ps.sheet_id = cs.id 
+		     where pp.package_mix_id = #{packageId}
+		)
+	</select>
+	
+	<!-- 获取混合套餐的套餐之外的量表id -->
+	<select id="getSheetIdList" parameterType="java.lang.Long" resultType="java.lang.Long">
+		select s.id from check_package_mix_sheet_asso a 
+		left join check_sheet s on a.sheet_id = s.id 
+		where a.package_mix_id = #{packageId} 
+		and s.id not in (
+		     select cs.id from check_package_mix_package_asso pp 
+		     left join check_package_sheet_asso ps on pp.package_id = ps.package_id  
+		     left join check_sheet cs on ps.sheet_id = cs.id 
+		     where pp.package_mix_id = #{packageId}
+		)
+	</select>
+</mapper>

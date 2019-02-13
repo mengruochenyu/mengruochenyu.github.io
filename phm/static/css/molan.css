@@ -1,0 +1,9 @@
+.width800 { width: 800px; }
+.pdl20 { padding-left: 20px; }
+.pdl40 { padding-left: 40px; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.v-top { vertical-align: top; }
+.ml-table th { width: 14%; text-align: right; border-bottom: 0 !important; }
+.error {color:red;}
