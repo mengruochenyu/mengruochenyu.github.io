@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	<meta charset="UTF-8">
+	<title>注册</title>
+	<link rel="stylesheet" type="text/css" href="css/zhuce.css" />
+</head>
+
+<body>
+	<div style="width: 100%;background: #3C3B40;">
+		<div class="top">注册</div>
+	</div>
+	<div class="img">
+		<img src="img/logo.png" alt="" />
+	</div>
+	<!---->
+	<div class="shouji">手机号</div>
+	<div style="margin-top: 2px;margin: 0 auto;width: 84%;border-bottom:1px solid rgba(235, 235, 235, 1);">
+		<input type="text" name="txt" class="txt" id="tet" value="" placeholder="请输入手机号" />
+	</div>
+	<!---->
+	<div class="yanzhengma">验证码</div>
+	<div style="margin-top: 2px;margin: 0 auto;width: 84%;border-bottom:1px solid rgba(235, 235, 235, 1);position: relative;">
+		<input type="password" name="txt" id="txt" value="" placeholder="请输入验证码" />
+		<div class="huoqu" style="background-color: rgba(64, 183, 175, 1);">获取验证码</div>
+	</div>
+	<div class="erromsg" id="erromsg"></div>
+	<!--button-->
+	<div class="btn" id="registered">下一步</div>
+	<!--foot-->
+	<div class="foot">
+		<span style="color: #4E4E4E;">注册即同意</span><span style="color:#FF4863 ;">《PHM用户协议》</span>
+
+	</div>
+</body>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script src="js/main.js"></script>
+<script type="text/javascript">
+	var str = "";
+	var checkbtn = false;
+	// $('#txt').keyup(function() {
+	// 	var value = $(this).val(); //输入的时候获取输入框的值
+	// 	if(value.substr(value.length - 1, 1)!='*'){
+	// 		str += value.substr(value.length - 1, 1); //获取最后一个字符加到到str,因为除了最后一个字符，其他的已经为*
+	// 		$(this).val(value.replace(/./g, '*')) //输入框内容全部变为*
+	// 		console.log(str);
+	// 	}
+	// })
+	//下一步按钮
+	var txt = document.getElementById("txt");
+	var btn = document.getElementsByClassName("btn")[0];
+	var register = document.getElementById("registered");
+	var tet = document.getElementById("tet");
+	var huoqu = document.getElementsByClassName("huoqu")[0];
+
+	txt.oninput = function() {
+		if (txt.value != "" && tet.value != "" && tet.value.length == 11) {
+			btn.style.background = "#40B7AF";
+			btn.style.color = "#fff";
+			checkbtn = true;
+		} else {
+			btn.style.background = "#EBEBEB";
+			btn.style.color = "#AAAAAA";
+			checkbtn = false;
+		}
+	}
+	//获取验证码按钮
+	tet.oninput = function() {
+		if (tet.value != "" && tet.value.length == 11) {
+			huoqu.style.display = "block";
+		} else {
+			huoqu.style.display = "none";
+		}
+	}
+	//验证码
+	var bol = true;
+	huoqu.onclick = function() {
+		if (bol) {
+			checkPhone(tet.value);//验证手机号
+			$.ajax({
+				url: config.url + "member/user/mobilecode/" + tet.value,
+				type: "get",
+				dataType: "json",
+				contentType: "application/json; charset=utf-8",
+				success: function(data) {
+					var code = data.code;
+					if (code == 200) {
+						console.log("验证码已发送");
+					} else if (code == 402 || code == 407) {
+						console.log("参数存在异常");
+					} else if (code == 409 || code == 410) {
+						jump(config.login);
+						delAllCookies();
+					} else {
+						//fail(data);//找不到fail
+						console.log(code + "短信发送失败");
+					}
+				},
+				error: function(xhr) {
+					if (error) {
+						error(xhr);
+					} else {
+						Alert("网络不稳定，稍后再试！");
+					}
+				}
+			});
+			bol = false;
+			huoqu.style.background = "#EBEBEB";
+			huoqu.style.color = "#AAAAAA";
+			var hour = 60;
+			var timer = setInterval(function() {
+				hour--;
+				var htmll = "(" + hour + "/s)";
+				huoqu.innerHTML = htmll;
+				if (hour == 0) {
+					clearInterval(timer);
+					huoqu.innerHTML = "获取验证码";
+					huoqu.style.background = "#40B7AF";
+					huoqu.style.color = "#ffffff";
+					bol = true;
+				}
+			}, 1000)
+		}
+	}
+
+	//register按钮的点击事件
+	register.onclick = function() {
+		if(checkbtn == false){
+			return;
+		}
+		str = txt.value;
+		$.ajax({
+			url: config.url + "member/user/register",
+			type: "POST",
+			data: JSON.stringify({
+				mobile: tet.value,
+				authCode: str,
+				registrationId: ""
+			}),
+			dataType: "json",
+			contentType: "application/json; charset=utf-8",
+			success: function(data) {
+				var code = data.code;
+				if (code == 200) {
+					//页面跳转
+					console.log(data.data);
+					window.location.href='zhuceDetail.html?token='+data.data.token+'&number='+data.data.number+'&mobile='+tet.value;
+				} else if (code == 402 || code == 407) {
+					console.log("参数存在异常");
+				} else if (code == 409 || code == 410) {
+					jump(config.login);
+					delAllCookies();
+				} else {
+					//fail(data);
+					console.log(code);
+					if(code == 602){
+						$("#erromsg").html("手机号已注册").fadeToggle("show");
+						setTimeout(function () {
+				        $("#erromsg").fadeToggle("hide");
+				    }, 850);
+					} else if (code == 403) {
+						$("#erromsg").html("数据为空").fadeToggle("show");
+						setTimeout(function () {
+				        $("#erromsg").fadeToggle("hide");
+				    }, 850);
+					} else if (code == 603) {
+						$("#erromsg").html("验证码错误").fadeToggle("show");
+						setTimeout(function () {
+				        $("#erromsg").fadeToggle("hide");
+				    }, 850);
+					}
+				}
+			},
+			error: function(xhr) {
+				if (error) {
+					error(xhr);
+				} else {
+					$("#erromsg").html("网络不稳定，请稍后再试！").fadeToggle("show");
+					setTimeout(function () {
+							$("#erromsg").fadeToggle("hide");
+					}, 850);
+				}
+			}
+		});
+	};
+</script>
+
+</html>

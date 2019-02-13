@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="UTF-8">
+		<title>下载</title>
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="css/xiazai.css"/>
+	</head>
+	<body>
+		<div style="width: 100%;background: #3C3B40;">
+			<div class="top">下载</div>
+		</div>
+		<div class="img">
+			<img src="img/logo.png" alt="" />
+		</div>
+		<!---->
+		<div class="one1">PHM下载</div>
+		<div class="one2">文案说明文案说明文案说明文案说明文案说明文案说明</div>
+		<div class="one3"><img src="img/ios.png" alt="" class="xiazai"/><span>苹果手机点击下载</span></div>
+		<div class="one4"><img src="img/anzhuo.png" alt="" class="xiazai" /><span>安卓手机点击下载</span></div>
+	</body>
+	<script type="text/javascript">
+		$(function(){
+			$(".one3").click(function(){
+				console.log("我的");
+				window.location.href = 'app:download';
+			});
+			$(".one4").click(function(){
+				console.log("我的");
+				window.location.href = 'https://www.pgyer.com/Q59r';
+			});
+		});
+	</script>
+</html>
